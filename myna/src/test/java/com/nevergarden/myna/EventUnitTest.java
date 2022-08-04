@@ -15,7 +15,7 @@ public class EventUnitTest {
     @Test
     public void type_isCorrect() {
         Event event = Event.fromPool("create", false, null);
-        assertEquals(event.getType(), "create");
+        Assert.assertEquals(event.getType(), "create");
         Event.toPool(event);
     }
 
@@ -45,8 +45,8 @@ public class EventUnitTest {
             Event newEvent = Event.fromPool("new", false, null);
             assertEquals(mEventPool.size(), 1);
 
-            assertEquals(event, newEvent);
-            assertNotEquals(event, Event.fromPool("another"));
+            Assert.assertEquals(event, newEvent);
+            Assert.assertNotEquals(event, Event.fromPool("another"));
         } catch (NoSuchFieldException e) {
             Assert.fail("Field: sEventPool does not exist in Event");
         } catch (IllegalAccessException e) {
@@ -57,9 +57,9 @@ public class EventUnitTest {
     @Test
     public void event_setTypeWorks() {
         Event wrongEventType = Event.fromPool("main");
-        assertEquals(wrongEventType.getType(), "main");
+        Assert.assertEquals(wrongEventType.getType(), "main");
         wrongEventType.setType("create");
-        assertNotEquals(wrongEventType.getType(), "main");
+        Assert.assertNotEquals(wrongEventType.getType(), "main");
     }
 
     @Test
@@ -67,10 +67,10 @@ public class EventUnitTest {
         Event noBubbleEvent = Event.fromPool("newEvent");
         noBubbleEvent.setBubbles(true);
 
-        assertEquals(noBubbleEvent.getBubbles(), true);
+        Assert.assertEquals(noBubbleEvent.getBubbles(), true);
 
         Event withBubble = Event.fromPool("another", true);
-        assertEquals(withBubble.getBubbles(), true);
+        Assert.assertEquals(withBubble.getBubbles(), true);
     }
 
     @Test
@@ -79,8 +79,8 @@ public class EventUnitTest {
         TestObjectWithName someData = new TestObjectWithName();
         noDataEvent.setData(someData);
 
-        assertNotEquals(noDataEvent.getData(), null);
-        assertEquals(noDataEvent.getData(), someData);
+        Assert.assertNotEquals(noDataEvent.getData(), null);
+        Assert.assertEquals(noDataEvent.getData(), someData);
     }
 }
 

@@ -49,8 +49,8 @@ public class EventDispatcherUnitTest {
             public void onEvent(Event event) {}
         };
         eventDispatcher.addEventListener("create", someEventListener);
-        assertEquals(eventDispatcher.hasEventListener("create", someEventListener), true);
-        assertEquals(eventDispatcher.hasEventListener("create", notAddedEventListener), false);
+        Assert.assertEquals(eventDispatcher.hasEventListener("create", someEventListener), true);
+        Assert.assertEquals(eventDispatcher.hasEventListener("create", notAddedEventListener), false);
     }
 
     @Test
