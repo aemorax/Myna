@@ -1,25 +1,26 @@
 package com.nevergarden.myna.events;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Stack;
+// import java.util.Stack;
 
 public class EventDispatcher {
-    final private Map<String, ArrayList<EventListener>> _eventListeners = new HashMap<>();
-    final private Stack<String> _eventStack = new Stack<>();
+    final private Map<String, ArrayList<EventListener>> eventListeners = new HashMap<>();
+    // final private Stack<String> _eventStack = new Stack<>();
 
     public EventDispatcher() {
 
     }
 
     public void addEventListener(String type, EventListener listener) {
-        ArrayList<EventListener> eventListeners = _eventListeners.get(type);
+        ArrayList<EventListener> eventListeners = this.eventListeners.get(type);
         if (eventListeners == null) {
             eventListeners = new ArrayList<>();
-            this._eventListeners.put(type, eventListeners);
+            this.eventListeners.put(type, eventListeners);
         }
         if (!eventListeners.contains(listener)) {
             eventListeners.add(listener);
@@ -27,48 +28,49 @@ public class EventDispatcher {
     }
 
     public void removeEventListener(String type, EventListener listener) {
-        if (this._eventListeners.containsKey(type)) {
-            Objects.requireNonNull(this._eventListeners.get(type)).remove(listener);
+        if (this.eventListeners.containsKey(type)) {
+            Objects.requireNonNull(this.eventListeners.get(type)).remove(listener);
+            if(Objects.requireNonNull(this.eventListeners.get(type)).isEmpty())
+                this.eventListeners.remove(type);
         }
     }
 
     public void removeEventListeners(String type) {
-        this._eventListeners.remove(type);
+        this.eventListeners.remove(type);
     }
 
     public Boolean hasEventListener(String type, EventListener listener) {
-        if (!this._eventListeners.containsKey(type))
+        if (!this.eventListeners.containsKey(type))
             return false;
-        return Objects.requireNonNull(this._eventListeners.get(type)).contains(listener);
+        return Objects.requireNonNull(this.eventListeners.get(type)).contains(listener);
     }
 
-    public Boolean invokeEvent(Event event) {
-        if (!this._eventListeners.containsKey(event.getType())) {
-            return false;
+    public void invokeEvent(@NonNull Event event) {
+        if (!this.eventListeners.containsKey(event.getType())) {
+            return;
         }
 
-        ArrayList<EventListener> listeners = this._eventListeners.get(event.getType());
+        ArrayList<EventListener> listeners = this.eventListeners.get(event.getType());
+        assert listeners != null;
 
         if (!listeners.isEmpty()) {
             event.currentTarget = this;
-            _eventStack.push(event.getType());
+            // _eventStack.push(event.getType());
 
-
-            Iterator<EventListener> listenerIterator = listeners.iterator();
-            while (listenerIterator.hasNext()) {
-                EventListener listener = listenerIterator.next();
+            int i = 0, listenersSize = listeners.size();
+            while (i < listenersSize) {
+                EventListener listener = listeners.get(i);
                 listener.onEvent(event);
                 if (event.stopsImmediatePropagation) {
-                    _eventStack.pop();
-                    return false;
+                    // _eventStack.pop();
+                    return;
                 }
+                i++;
             }
-            return event.stopsPropagation;
         }
-        return false;
     }
 
-    public void dispatchEvent(Event event) {
+    public void dispatchEvent(@NonNull Event event) {
         EventDispatcher previousTarget = event.target;
         event.target = this;
         invokeEvent(event);
@@ -77,10 +79,6 @@ public class EventDispatcher {
 
     public void dispatchEventWith(String name) {
         dispatchEventWith(name, false, null);
-    }
-
-    public void dispatchEventWith(String name, Boolean bubbles) {
-        dispatchEventWith(name, bubbles, null);
     }
 
     public void dispatchEventWith(String type, Boolean bubbles, Object data) {
