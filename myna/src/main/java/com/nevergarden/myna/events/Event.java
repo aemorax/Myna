@@ -3,6 +3,9 @@ package com.nevergarden.myna.events;
 import java.util.ArrayList;
 
 public class Event {
+    public static final String FOCUS = "focus";
+    public static final String CONTEXT_CREATE = "contextCreate";
+    public static final String RESIZE = "resize";
 
     private final static ArrayList<Event> sEventPool = new ArrayList<>();
     private String type;

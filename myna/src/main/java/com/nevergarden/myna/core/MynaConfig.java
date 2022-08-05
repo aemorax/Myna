@@ -1,7 +1,10 @@
 package com.nevergarden.myna.core;
 
-public class MynaConfig {
-    public MynaConfig() {
+class MynaConfig {
+    public int width = 800;
+    public int height = 600;
 
-    }
+    public int redSize = 8;
+    public int greenSize = 8;
+    public int blueSize = 8;
 }
