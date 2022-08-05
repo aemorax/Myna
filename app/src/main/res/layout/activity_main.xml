@@ -6,17 +6,19 @@
     android:layout_height="match_parent"
     tools:context="com.nevergarden.qaud_view.MainActivity">
 
-    <com.nevergarden.myna.core.Myna
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/eventDispatcher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/hello_world"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="@string/hello_world" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.nevergarden.myna.core.Myna
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:myna_pixelFormat="RGBA_8888"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

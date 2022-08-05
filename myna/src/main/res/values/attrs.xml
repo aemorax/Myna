@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Myna">
+        <attr name="myna_pixelFormat" format="enum">
+            <enum name="OPAQUE" value="0"/>
+            <enum name="RGBX_8888" value="1"/>
+            <enum name="RGBA_8888" value="2"/>
+            <enum name="RGB_565" value="3"/>
+            <enum name="RGB_888" value="4"/>
+            <enum name="TRANSPARENT" value="5"/>
+            <enum name="UNKNOWN" value="6"/>
+        </attr>
+    </declare-styleable>
+</resources>
