@@ -1,7 +1,5 @@
 package com.nevergarden.myna.interfaces;
 
-import androidx.annotation.Keep;
-
 public interface Container {
     int getChildrenCount();
     Container addChild(Container child);
