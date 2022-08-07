@@ -13,7 +13,6 @@ import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventDispatcher;
 import com.nevergarden.myna.events.EventListener;
 
-import java.util.Random;
 import javax.microedition.khronos.opengles.GL10;
 
 public class Myna extends GLSurfaceView {
@@ -49,14 +48,6 @@ public class Myna extends GLSurfaceView {
     public void step() {}
 
     public void render(GL10 gl10) {
-        /*
-        Random r = new Random();
-        float red = r.nextFloat();
-        float green = r.nextFloat();
-        float blue = r.nextFloat();
-        gl10.glClearColor(red, green, blue, 0.2f);
-
-         */
         this.requestRender();
     }
 
@@ -85,9 +76,6 @@ public class Myna extends GLSurfaceView {
             case TRANSPARENT: holder.setFormat(PixelFormat.TRANSPARENT); break;
             case UNKNOWN: holder.setFormat(PixelFormat.UNKNOWN); break;
         }
-
-        if(this.config.getAlphaSize() != 0)
-            this.setZOrderOnTop(true);
 
         Log.d(TAG, "r:" + this.config.getRedSize() +
                 "g:" + this.config.getGreenSize() +
