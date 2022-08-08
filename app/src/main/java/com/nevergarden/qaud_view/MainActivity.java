@@ -15,6 +15,8 @@ import com.nevergarden.myna.events.IEvent;
 import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
 
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -31,12 +33,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onEvent(IEvent event) {
                 TouchEvent touchEvent = (TouchEvent) event;
-                Touch[] t = touchEvent.getData();
-                for (Touch m:t) {
-                    if(m!=null) {
-                        Log.d("Myna", m.toString());
-                        m.dispose();
-                    }
+                Map<Integer, Touch> t = touchEvent.getData();
+
+                if(t.containsKey(0)) {
+                    Touch m = t.get(0);
+                    assert m != null;
+                    Log.d("Myna", "Touch: " + m.getId() + " " + "Delta: " + m.deltaTime() + " Duration: " + m.duration());
+                }
+
+                for (Touch x:t.values()) {
+                    if(x!=null)
+                        x.dispose();
                 }
             }
         });

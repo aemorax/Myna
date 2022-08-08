@@ -33,6 +33,6 @@ public class Renderer implements GLSurfaceView.Renderer {
     @Override
     public void onDrawFrame(GL10 gl10) {
         GLES10.glClear(GLES10.GL_COLOR_BUFFER_BIT);
-        this.myna.render(gl10);
+        this.myna.render();
     }
 }

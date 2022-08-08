@@ -1,5 +1,6 @@
 package com.nevergarden.myna.core;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PixelFormat;
@@ -14,7 +15,7 @@ import com.nevergarden.myna.events.EventDispatcher;
 import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
 
-import javax.microedition.khronos.opengles.GL10;
+import java.util.Map;
 
 public class Myna extends GLSurfaceView {
     public final static String TAG = "Myna";
@@ -27,22 +28,22 @@ public class Myna extends GLSurfaceView {
         super(context, attrs);
 
         this.eventDispatcher = new EventDispatcher();
-        //this.eventDispatcher.addEventListener(Event.CONTEXT_CREATE, event -> Log.d(TAG, "Myna Created"));
-        //this.eventDispatcher.addEventListener(Event.FOCUS, event -> Log.d(TAG, "Window Focused"));
 
         this.setConfig(attrs);
         this.renderer = new com.nevergarden.myna.gfx.Renderer(this);
         this.setRenderer(this.renderer);
         this.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-        //this.eventDispatcher.dispatchEventWith(Event.CONTEXT_CREATE);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         synchronized (this.renderer.thread) {
-            Touch[] touches = Touch.byNativeEvent(event);
+            Map<Integer, Touch> touches = Touch.byNativeEvent(event);
             eventDispatcher.dispatchEvent(TouchEvent.fromPool(touches, false));
+            performClick();
+            // TODO: write touch handler in a way that can recycle event at the end.
             // event.recycle();
         }
         return true;
@@ -50,7 +51,7 @@ public class Myna extends GLSurfaceView {
 
     public void step() {}
 
-    public void render(GL10 gl10) {
+    public void render() {
         this.requestRender();
     }
 
