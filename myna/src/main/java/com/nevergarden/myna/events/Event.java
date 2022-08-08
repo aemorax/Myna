@@ -2,47 +2,44 @@ package com.nevergarden.myna.events;
 
 import java.util.ArrayList;
 
-public class Event {
-    public static final String FOCUS = "focus";
-    public static final String CONTEXT_CREATE = "contextCreate";
-    public static final String RESIZE = "resize";
-
-    private final static ArrayList<Event> sEventPool = new ArrayList<>();
-    private String type;
-    private Boolean bubbles;
-    private Object data;
+public class Event implements IEvent {
+    protected final static ArrayList<IEvent> sEventPool = new ArrayList<>();
+    protected String type;
+    protected Boolean bubbles;
+    protected Object data;
     public EventDispatcher target;
     public EventDispatcher currentTarget;
     public Boolean stopsPropagation = false;
     public Boolean stopsImmediatePropagation = false;
 
-    private Event(String type, Boolean bubbles, Object data) {
+    protected Event(String type, Boolean bubbles, Object data) {
         this.type = type;
         this.bubbles = bubbles;
         this.data = data;
     }
 
-    public static Event fromPool(String type) {
+    public static IEvent fromPool(String type) {
         return fromPool(type, false, null);
     }
 
-    public static Event fromPool(String type, Boolean bubbles) {
+    public static IEvent fromPool(String type, Boolean bubbles) {
         return fromPool(type, bubbles, null);
     }
 
-    public static Event fromPool(String type, Boolean bubbles, Object data) {
+    public static IEvent fromPool(String type, Boolean bubbles, Object data) {
         if (!sEventPool.isEmpty()) {
-            return sEventPool.remove(0).reset(type, bubbles, data);
+            return Event.sEventPool.remove(0).reset(type, bubbles, data);
         }
         return new Event(type, bubbles, data);
     }
 
-    public static void toPool(Event event) {
-        event.data = event.target = event.currentTarget = null;
-        sEventPool.add(event);
+    public static void toPool(IEvent event) {
+        Event e = (Event) event;
+        e.data = e.target = e.currentTarget = null;
+        sEventPool.add(e);
     }
 
-    private Event reset(String type, Boolean bubbles, Object data) {
+    public IEvent reset(String type, Boolean bubbles, Object data) {
         this.type = type;
         this.bubbles = bubbles;
         this.data = data;
@@ -65,6 +62,31 @@ public class Event {
 
     public void setBubbles(Boolean bubbles) {
         this.bubbles = bubbles;
+    }
+
+    @Override
+    public EventDispatcher getTarget() {
+        return this.target;
+    }
+
+    @Override
+    public EventDispatcher getCurrentTarget() {
+        return this.currentTarget;
+    }
+
+    @Override
+    public void setTarget(EventDispatcher target) {
+        this.target = target;
+    }
+
+    @Override
+    public void setCurrentTarget(EventDispatcher target) {
+        this.currentTarget = target;
+    }
+
+    @Override
+    public Boolean getStopsImmediatePropagation() {
+        return this.stopsImmediatePropagation;
     }
 
     public Object getData() {

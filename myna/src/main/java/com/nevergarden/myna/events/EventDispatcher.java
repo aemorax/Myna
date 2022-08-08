@@ -9,7 +9,7 @@ import java.util.Objects;
 // import java.util.Stack;
 
 public class EventDispatcher {
-    final private Map<String, ArrayList<EventListener>> eventListeners = new HashMap<>();
+    protected Map<String, ArrayList<EventListener>> eventListeners = new HashMap<>();
     // final private Stack<String> _eventStack = new Stack<>();
 
     public EventDispatcher() {
@@ -45,7 +45,7 @@ public class EventDispatcher {
         return Objects.requireNonNull(this.eventListeners.get(type)).contains(listener);
     }
 
-    public void invokeEvent(@NonNull Event event) {
+    public void invokeEvent(@NonNull IEvent event) {
         if (!this.eventListeners.containsKey(event.getType())) {
             return;
         }
@@ -54,14 +54,14 @@ public class EventDispatcher {
         assert listeners != null;
 
         if (!listeners.isEmpty()) {
-            event.currentTarget = this;
+            event.setCurrentTarget(this);
             // _eventStack.push(event.getType());
 
             int i = 0, listenersSize = listeners.size();
             while (i < listenersSize) {
                 EventListener listener = listeners.get(i);
                 listener.onEvent(event);
-                if (event.stopsImmediatePropagation) {
+                if (event.getStopsImmediatePropagation()) {
                     // _eventStack.pop();
                     return;
                 }
@@ -70,11 +70,11 @@ public class EventDispatcher {
         }
     }
 
-    public void dispatchEvent(@NonNull Event event) {
-        EventDispatcher previousTarget = event.target;
-        event.target = this;
+    public void dispatchEvent(@NonNull IEvent event) {
+        EventDispatcher previousTarget = event.getTarget();
+        event.setTarget(this);
         invokeEvent(event);
-        if (previousTarget != null) event.target = previousTarget;
+        if (previousTarget != null) event.setTarget(previousTarget);
     }
 
     public void dispatchEventWith(String name) {
@@ -82,7 +82,7 @@ public class EventDispatcher {
     }
 
     public void dispatchEventWith(String type, Boolean bubbles, Object data) {
-        Event event = Event.fromPool(type, bubbles, data);
+        IEvent event = Event.fromPool(type, bubbles, data);
         dispatchEvent(event);
         Event.toPool(event);
     }

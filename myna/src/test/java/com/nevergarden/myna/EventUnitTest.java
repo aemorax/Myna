@@ -1,9 +1,9 @@
 package com.nevergarden.myna;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 import com.nevergarden.myna.events.Event;
+import com.nevergarden.myna.events.IEvent;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,14 +14,14 @@ import java.util.ArrayList;
 public class EventUnitTest {
     @Test
     public void type_isCorrect() {
-        Event event = Event.fromPool("create", false, null);
+        IEvent event = Event.fromPool("create", false, null);
         Assert.assertEquals(event.getType(), "create");
         Event.toPool(event);
     }
 
     @Test
     public void data_isCorrect() {
-        Event event = Event.fromPool("create", false, new TestObjectWithName());
+        IEvent event = Event.fromPool("create", false, new TestObjectWithName());
         assertEquals(((TestObjectWithName) event.getData()).name, "Test");
         Event.toPool(event);
     }
@@ -29,20 +29,20 @@ public class EventUnitTest {
     @Test
     @SuppressWarnings("unchecked")
     public void event_poolingWorks() {
-        Event event = Event.fromPool("event");
-        Event event2 = Event.fromPool("event2");
+        IEvent event = Event.fromPool("event");
+        IEvent event2 = Event.fromPool("event2");
         Event.toPool(event);
         Event.toPool(event2);
         try {
-            Class<? extends Event> eventClass = event.getClass();
+            Class<? extends IEvent> eventClass = event.getClass();
             Field sEventPool = eventClass.getDeclaredField("sEventPool");
             sEventPool.setAccessible(true);
-            ArrayList<Event> mEventPool = (ArrayList<Event>) sEventPool.get(event);
+            ArrayList<IEvent> mEventPool = (ArrayList<IEvent>) sEventPool.get(event);
 
             assert mEventPool != null;
             assertEquals(mEventPool.size(), 2);
 
-            Event newEvent = Event.fromPool("new", false, null);
+            IEvent newEvent = Event.fromPool("new", false, null);
             assertEquals(mEventPool.size(), 1);
 
             Assert.assertEquals(event, newEvent);
@@ -56,7 +56,7 @@ public class EventUnitTest {
 
     @Test
     public void event_setTypeWorks() {
-        Event wrongEventType = Event.fromPool("main");
+        IEvent wrongEventType = Event.fromPool("main");
         Assert.assertEquals(wrongEventType.getType(), "main");
         wrongEventType.setType("create");
         Assert.assertNotEquals(wrongEventType.getType(), "main");
@@ -64,18 +64,18 @@ public class EventUnitTest {
 
     @Test
     public void event_setBubblesWorks() {
-        Event noBubbleEvent = Event.fromPool("newEvent");
+        IEvent noBubbleEvent = Event.fromPool("newEvent");
         noBubbleEvent.setBubbles(true);
 
         Assert.assertEquals(noBubbleEvent.getBubbles(), true);
 
-        Event withBubble = Event.fromPool("another", true);
+        IEvent withBubble = Event.fromPool("another", true);
         Assert.assertEquals(withBubble.getBubbles(), true);
     }
 
     @Test
     public void event_setDataWorks() {
-        Event noDataEvent = Event.fromPool("newEvent");
+        IEvent noDataEvent = Event.fromPool("newEvent");
         TestObjectWithName someData = new TestObjectWithName();
         noDataEvent.setData(someData);
 

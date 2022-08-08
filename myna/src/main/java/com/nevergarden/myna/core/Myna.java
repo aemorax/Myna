@@ -6,12 +6,13 @@ import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
 import com.nevergarden.myna.R;
-import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventDispatcher;
-import com.nevergarden.myna.events.EventListener;
+import com.nevergarden.myna.events.Touch;
+import com.nevergarden.myna.events.TouchEvent;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -19,30 +20,32 @@ public class Myna extends GLSurfaceView {
     public final static String TAG = "Myna";
 
     public final EventDispatcher eventDispatcher;
+    private final com.nevergarden.myna.gfx.Renderer renderer;
     private final MynaConfig config = new MynaConfig();
 
     public Myna(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         this.eventDispatcher = new EventDispatcher();
-        this.eventDispatcher.addEventListener(Event.CONTEXT_CREATE, new EventListener() {
-            @Override
-            public void onEvent(Event event) {
-                Log.d(TAG, "Myna Created");
-            }
-        });
-        this.eventDispatcher.addEventListener(Event.FOCUS, new EventListener() {
-            @Override
-            public void onEvent(Event event) {
-                Log.d(TAG, "Window Focused");
-            }
-        });
+        //this.eventDispatcher.addEventListener(Event.CONTEXT_CREATE, event -> Log.d(TAG, "Myna Created"));
+        //this.eventDispatcher.addEventListener(Event.FOCUS, event -> Log.d(TAG, "Window Focused"));
 
         this.setConfig(attrs);
-
-        this.setRenderer(new com.nevergarden.myna.gfx.Renderer(this));
+        this.renderer = new com.nevergarden.myna.gfx.Renderer(this);
+        this.setRenderer(this.renderer);
         this.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-        this.eventDispatcher.dispatchEventWith(Event.CONTEXT_CREATE);
+        //this.eventDispatcher.dispatchEventWith(Event.CONTEXT_CREATE);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        synchronized (this.renderer.thread) {
+            Touch[] touches = Touch.byNativeEvent(event);
+            eventDispatcher.dispatchEvent(TouchEvent.fromPool(touches, false));
+            // event.recycle();
+        }
+        return true;
     }
 
     public void step() {}
