@@ -3,7 +3,7 @@ package com.nevergarden.myna.gfx;
 import android.opengl.GLES20;
 
 public class GLProgram {
-    private final int nativeProgram;
+    public final int nativeProgram;
     private boolean disposed= false;
 
     public GLProgram(int program) {

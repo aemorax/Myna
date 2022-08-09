@@ -5,12 +5,14 @@ import android.opengl.GLSurfaceView;
 
 import com.nevergarden.myna.core.Myna;
 import com.nevergarden.myna.core.MynaThread;
+import com.nevergarden.myna.events.Event;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class Renderer implements GLSurfaceView.Renderer {
     public final MynaThread thread;
+    Triangle triangle;
     private final Myna myna;
     public Renderer(Myna myna) {
         this.myna = myna;
@@ -20,7 +22,8 @@ public class Renderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
         GLES10.glClearColor(0,1,0,1);
-        //this.myna.eventDispatcher.dispatchEventWith(Event.CONTEXT_CREATE);
+        // this.myna.eventDispatcher.dispatchEventWith(Event.CONTEXT_CREATE);
+        this.triangle = new Triangle();
         this.thread.start();
     }
 
@@ -33,6 +36,7 @@ public class Renderer implements GLSurfaceView.Renderer {
     @Override
     public void onDrawFrame(GL10 gl10) {
         GLES10.glClear(GLES10.GL_COLOR_BUFFER_BIT);
+        triangle.draw();
         this.myna.render();
     }
 }

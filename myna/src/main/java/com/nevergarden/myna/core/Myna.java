@@ -1,7 +1,9 @@
 package com.nevergarden.myna.core;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ConfigurationInfo;
 import android.content.res.TypedArray;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
@@ -14,6 +16,7 @@ import com.nevergarden.myna.R;
 import com.nevergarden.myna.events.EventDispatcher;
 import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
+import com.nevergarden.myna.gfx.Triangle;
 
 import java.util.Map;
 
@@ -26,7 +29,6 @@ public class Myna extends GLSurfaceView {
 
     public Myna(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         this.eventDispatcher = new EventDispatcher();
 
         this.setConfig(attrs);
@@ -61,6 +63,21 @@ public class Myna extends GLSurfaceView {
         typedArray.recycle();
         MynaPixelFormat pixelFormat = MynaPixelFormat.fromId(id);
         this.config.setPixelFormat(pixelFormat);
+
+        // Find the best version of OpenGL ES
+        ActivityManager activityManager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+        ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
+
+        int eglVersion = configurationInfo.reqGlEsVersion;
+        if(eglVersion >= 0x30000) {
+            this.setEGLContextClientVersion(3);
+            Log.d(TAG, "Using: OpenGLES 3.0");
+        } else if(eglVersion >= 0x20000) {
+            this.setEGLContextClientVersion(2);
+            Log.d(TAG, "Using: OpenGLES 2.0");
+        } else {
+            throw new Error("Not Supported EGL version");
+        }
 
         setEGLConfigChooser(
                 this.config.getRedSize(),
