@@ -2,10 +2,6 @@ package com.nevergarden.qaud_view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ActivityManager;
-import android.content.Context;
-import android.content.pm.ConfigurationInfo;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -18,10 +14,13 @@ import com.nevergarden.myna.events.EventListener;
 import com.nevergarden.myna.events.IEvent;
 import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
+import com.nevergarden.myna.gfx.Triangle;
 
 import java.util.Map;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    private static Triangle triangle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +50,35 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        myna.eventDispatcher.addEventListener(Event.CONTEXT_CREATE, new EventListener() {
+
+            @Override
+            public void onEvent(IEvent event) {
+                triangle = new Triangle(
+                        new float[]{0.1f, 0.1f, 0.5f, 1.0f},
+                        new float[]{
+                                0, 0.4f, 0.0f, // top
+                                -0.3f, -0.3f, 0.0f, // bottom right
+                                0.3f, -0.3f, 0.0f
+                        });
+            }
+        });
+
+        myna.eventDispatcher.addEventListener(Event.ON_DRAW_FRAME, new EventListener() {
+            @Override
+            public void onEvent(IEvent event) {
+                float[] newColor = new float[4];
+                Random rand = new Random();
+                for (int i = 0; i < 3; i++) {
+                    newColor[i] = rand.nextFloat();
+                }
+                newColor[3] = 1;
+                triangle.changeColor(newColor);
+                triangle.draw();
+            }
+        });
+
     }
 }
 
