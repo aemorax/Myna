@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.content.res.TypedArray;
 import android.graphics.PixelFormat;
+import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -103,5 +104,9 @@ public class Myna extends GLSurfaceView {
                 "b:" + this.config.getBlueSize() +
                 "a:" + this.config.getAlphaSize()
         );
+
+        GLES20.glEnable(GLES20.GL_CULL_FACE);
+        GLES20.glCullFace(GLES20.GL_FRONT);
+        GLES20.glFrontFace(GLES20.GL_CCW);
     }
 }

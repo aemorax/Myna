@@ -14,6 +14,7 @@ import com.nevergarden.myna.events.EventListener;
 import com.nevergarden.myna.events.IEvent;
 import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
+import com.nevergarden.myna.gfx.Quad;
 import com.nevergarden.myna.gfx.Triangle;
 
 import java.util.Map;
@@ -21,6 +22,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private static Triangle triangle;
+    private static Quad quad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +64,25 @@ public class MainActivity extends AppCompatActivity {
                                 -0.3f, -0.3f, 0.0f, // bottom right
                                 0.3f, -0.3f, 0.0f
                         });
+
+                quad = new Quad(
+                        new float[]{0.1f, 0.1f, 0.5f, 1.0f},
+                        new float[]{
+                                0.3f, 0.3f, 0.0f, // top right
+                                -0.3f, 0.3f, 0.0f, // top left
+                                -0.3f, -0.3f, 0.0f, // bottom left
+                                -0.3f, -0.3f, 0.0f, // bottom left
+                                0.3f, 0.3f, 0.0f, // top right
+                                0.3f, -0.3f, 0.0f
+                        }
+                );
             }
         });
 
         myna.eventDispatcher.addEventListener(Event.ON_DRAW_FRAME, new EventListener() {
             @Override
             public void onEvent(IEvent event) {
-                float[] newColor = new float[4];
+                /*float[] newColor = new float[4];
                 Random rand = new Random();
                 for (int i = 0; i < 3; i++) {
                     newColor[i] = rand.nextFloat();
@@ -76,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
                 newColor[3] = 1;
                 triangle.changeColor(newColor);
                 triangle.draw();
+                 */
+                quad.draw();
             }
         });
 
