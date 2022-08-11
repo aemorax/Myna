@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Event implements IEvent {
     public final static String CONTEXT_CREATE = "context_create";
     public static final String ON_DRAW_FRAME = "on_draw_frame";
+    public static final String RESIZE = "resize";
 
     protected final static ArrayList<IEvent> sEventPool = new ArrayList<>();
     protected String type;

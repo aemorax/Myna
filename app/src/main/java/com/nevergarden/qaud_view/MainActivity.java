@@ -12,17 +12,17 @@ import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventDispatcher;
 import com.nevergarden.myna.events.EventListener;
 import com.nevergarden.myna.events.IEvent;
+import com.nevergarden.myna.events.ResizeEventData;
 import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
 import com.nevergarden.myna.gfx.Quad;
-import com.nevergarden.myna.gfx.Triangle;
 
 import java.util.Map;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-    private static Triangle triangle;
     private static Quad quad;
+    private static int width = 1080;
+    private static int height = 1920;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +34,15 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(view -> d.dispatchEvent(Event.fromPool("create")));
 
         Myna myna = findViewById(R.id.myna);
+        myna.eventDispatcher.addEventListener(Event.RESIZE, new EventListener() {
+            @Override
+            public void onEvent(IEvent event) {
+                ResizeEventData data = (ResizeEventData) event.getData();
+                width = data.width;
+                height = data.height;
+            }
+        });
+
         myna.eventDispatcher.addEventListener("touch", new EventListener() {
             @Override
             public void onEvent(IEvent event) {
@@ -57,23 +66,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onEvent(IEvent event) {
-                triangle = new Triangle(
-                        new float[]{0.1f, 0.1f, 0.5f, 1.0f},
-                        new float[]{
-                                0, 0.4f, 0.0f, // top
-                                -0.3f, -0.3f, 0.0f, // bottom right
-                                0.3f, -0.3f, 0.0f
-                        });
-
+                Log.d("Myna", "wh" + width + ":" + height);
                 quad = new Quad(
                         new float[]{0.1f, 0.1f, 0.5f, 1.0f},
                         new float[]{
-                                0.3f, 0.3f, 0.0f, // top right
-                                -0.3f, 0.3f, 0.0f, // top left
-                                -0.3f, -0.3f, 0.0f, // bottom left
-                                -0.3f, -0.3f, 0.0f, // bottom left
-                                0.3f, 0.3f, 0.0f, // top right
-                                0.3f, -0.3f, 0.0f
+                                width, height, 0f, // top right
+                                0, height, 0.0f, // top left
+                                0, 0, 0.0f, // bottom left
+                                0, 0, 0.0f, // bottom left
+                                width, height, 0.0f, // top right
+                                width, 0, 0.0f // bottom right
                         }
                 );
             }
@@ -82,15 +84,6 @@ public class MainActivity extends AppCompatActivity {
         myna.eventDispatcher.addEventListener(Event.ON_DRAW_FRAME, new EventListener() {
             @Override
             public void onEvent(IEvent event) {
-                /*float[] newColor = new float[4];
-                Random rand = new Random();
-                for (int i = 0; i < 3; i++) {
-                    newColor[i] = rand.nextFloat();
-                }
-                newColor[3] = 1;
-                triangle.changeColor(newColor);
-                triangle.draw();
-                 */
                 quad.draw();
             }
         });

@@ -17,7 +17,6 @@ import com.nevergarden.myna.R;
 import com.nevergarden.myna.events.EventDispatcher;
 import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
-import com.nevergarden.myna.gfx.Triangle;
 
 import java.util.Map;
 
