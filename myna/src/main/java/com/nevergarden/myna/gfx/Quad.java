@@ -24,7 +24,6 @@ public class Quad implements IDrawable {
     private int positionHandler;
 
     private int modelHandler;
-    private int viewHandler;
     private int projectionHandler;
 
     private int colorHandler;
@@ -62,12 +61,12 @@ public class Quad implements IDrawable {
         GLES20.glEnableVertexAttribArray(positionHandler);
         GLES20.glVertexAttribPointer(positionHandler, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, VERTEX_STRIDE, vertexBuffer);
 
+        Renderer.view.bind(program.nativeProgram);
+
         modelHandler = GLES20.glGetUniformLocation(program.nativeProgram, "uModel");
-        viewHandler = GLES20.glGetUniformLocation(program.nativeProgram, "uView");
         projectionHandler = GLES20.glGetUniformLocation(program.nativeProgram, "uProjection");
 
         GLES20.glUniformMatrix4fv(modelHandler, 1, false, tempIdentity, 0);
-        GLES20.glUniformMatrix4fv(viewHandler, 1, false, tempIdentity, 0);
         GLES20.glUniformMatrix4fv(projectionHandler, 1, false, Renderer.PROJECTION, 0);
 
         colorHandler = GLES20.glGetUniformLocation(program.nativeProgram, "vColor");

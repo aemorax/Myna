@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.nevergarden.myna.core.Myna;
 import com.nevergarden.myna.core.MynaThread;
+import com.nevergarden.myna.display.View;
 import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.ResizeEventData;
 
@@ -17,11 +18,14 @@ import javax.microedition.khronos.opengles.GL10;
 public class Renderer implements GLSurfaceView.Renderer {
     public final static float[] PROJECTION = new float[16];
     private final static Matrix4f PROJECTION_MAT = new Matrix4f();
+    public static View view;
     public final MynaThread thread;
     private final Myna myna;
     public Renderer(Myna myna) {
         this.myna = myna;
         this.thread = new MynaThread(myna);
+        // TODO: make it non static and send the view over ON_DRAW_FRAME
+        view = new View();
     }
 
     @Override
