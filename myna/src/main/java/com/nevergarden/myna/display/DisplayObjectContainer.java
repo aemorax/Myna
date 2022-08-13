@@ -1,15 +1,35 @@
 package com.nevergarden.myna.display;
 
+import com.nevergarden.myna.events.EventDispatcher;
 import com.nevergarden.myna.interfaces.Container;
 
 import java.util.ArrayList;
 
-public class DisplayObjectContainer extends DisplayObject implements Container {
-    private final ArrayList<Container> children;
+public class DisplayObjectContainer extends EventDispatcher implements Container {
+    protected final ArrayList<Container> children;
+    private Container parent = null;
 
     public DisplayObjectContainer() {
+        this(null);
+    }
+
+    public DisplayObjectContainer(Container parent) {
+        super();
+        if(parent!=null)
+            this.parent = parent;
         this.children = new ArrayList<>();
     }
+
+    @Override
+    public Container getParent() {
+        return this.parent;
+    }
+
+    @Override
+    public void setParent(Container container) {
+        this.parent = container;
+    }
+
     @Override
     public int getChildrenCount() {
         return this.children.size();
@@ -28,6 +48,7 @@ public class DisplayObjectContainer extends DisplayObject implements Container {
         if(this.children.contains(child))
             return null;
         this.children.add(index, child);
+        child.setParent(this);
         return child;
     }
 

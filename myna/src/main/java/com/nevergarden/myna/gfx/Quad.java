@@ -4,6 +4,8 @@ import android.opengl.GLES20;
 
 import com.nevergarden.myna.interfaces.IDrawable;
 
+import org.joml.Matrix4f;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -35,16 +37,23 @@ public class Quad implements IDrawable {
     private float[] quadCoords;
     private float[] quadColor;
 
-    private final float[] tempIdentity = new float[] {
+    private float[] modelMatrix = new float[] {
             1,0,0,0,
             0,1,0,0,
             0,0,1,0,
             0,0,0,1
     };
 
-    public Quad(float[] color, float[] coords) {
+    public Quad(float[] color, float width, float height) {
         this.quadColor = color;
-        this.quadCoords = coords;
+        this.quadCoords = new float[] {
+                width, height, 0f, // top right
+                0, height, 0.0f, // top left
+                0, 0, 0.0f, // bottom left
+                0, 0, 0.0f, // bottom left
+                width, height, 0.0f, // top right
+                width, 0, 0.0f // bottom right
+        };
 
         program = GLProgram.createProgramFromSource(vertexShader, fragmentShader);
         ByteBuffer bb = ByteBuffer.allocateDirect(quadCoords.length*4);
@@ -52,6 +61,10 @@ public class Quad implements IDrawable {
         vertexBuffer = bb.asFloatBuffer();
         vertexBuffer.put(quadCoords);
         vertexBuffer.position(0);
+    }
+
+    public void setMatrix(Matrix4f matrix) {
+        matrix.get(this.modelMatrix);
     }
 
     @Override
@@ -66,7 +79,7 @@ public class Quad implements IDrawable {
         modelHandler = GLES20.glGetUniformLocation(program.nativeProgram, "uModel");
         projectionHandler = GLES20.glGetUniformLocation(program.nativeProgram, "uProjection");
 
-        GLES20.glUniformMatrix4fv(modelHandler, 1, false, tempIdentity, 0);
+        GLES20.glUniformMatrix4fv(modelHandler, 1, false, this.modelMatrix, 0);
         GLES20.glUniformMatrix4fv(projectionHandler, 1, false, Renderer.PROJECTION, 0);
 
         colorHandler = GLES20.glGetUniformLocation(program.nativeProgram, "vColor");

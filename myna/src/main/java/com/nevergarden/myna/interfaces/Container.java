@@ -1,6 +1,8 @@
 package com.nevergarden.myna.interfaces;
 
 public interface Container {
+    Container getParent();
+    void setParent(Container container);
     int getChildrenCount();
     Container addChild(Container child);
     Container addChildAt(int index, Container child);

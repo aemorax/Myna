@@ -14,7 +14,11 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
 import com.nevergarden.myna.R;
+import com.nevergarden.myna.display.Stage;
+import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventDispatcher;
+import com.nevergarden.myna.events.EventListener;
+import com.nevergarden.myna.events.IEvent;
 import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
 
@@ -22,6 +26,8 @@ import java.util.Map;
 
 public class Myna extends GLSurfaceView {
     public final static String TAG = "Myna";
+
+    public Stage mainScene = new Stage();
 
     public final EventDispatcher eventDispatcher;
     private final com.nevergarden.myna.gfx.Renderer renderer;
@@ -35,6 +41,14 @@ public class Myna extends GLSurfaceView {
         this.renderer = new com.nevergarden.myna.gfx.Renderer(this);
         this.setRenderer(this.renderer);
         this.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+
+        this.eventDispatcher.addEventListener(Event.CONTEXT_CREATE, new EventListener() {
+            @Override
+            public void onEvent(IEvent event) {
+
+            }
+        });
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -54,6 +68,8 @@ public class Myna extends GLSurfaceView {
     public void step() {}
 
     public void render() {
+        mainScene.addAll();
+        mainScene.drawAll();
         this.requestRender();
     }
 

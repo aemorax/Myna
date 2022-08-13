@@ -3,11 +3,11 @@ package com.nevergarden.qaud_view;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nevergarden.myna.R;
 import com.nevergarden.myna.core.Myna;
+import com.nevergarden.myna.display.DisplayObject;
 import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventDispatcher;
 import com.nevergarden.myna.events.EventListener;
@@ -15,12 +15,10 @@ import com.nevergarden.myna.events.IEvent;
 import com.nevergarden.myna.events.ResizeEventData;
 import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
-import com.nevergarden.myna.gfx.Quad;
 
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private static Quad quad;
     private static int width = 1080;
     private static int height = 1920;
 
@@ -50,14 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 Map<Integer, Touch> t = touchEvent.getData();
 
                 if(t.containsKey(0)) {
-                    Touch m = t.get(0);
-                    assert m != null;
-                    Log.d("Myna", "Touch: " + m.getId() + " " + "Delta: " + m.deltaTime() + " Duration: " + m.duration());
-                }
-
-                for (Touch x:t.values()) {
-                    if(x!=null)
-                        x.dispose();
+                    myna.mainScene.removeChildAt(0);
                 }
             }
         });
@@ -66,28 +57,15 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onEvent(IEvent event) {
-                Log.d("Myna", "wh" + width + ":" + height);
-                quad = new Quad(
-                        new float[]{0.1f, 0.1f, 0.5f, 1.0f},
-                        new float[]{
-                                width, height, 0f, // top right
-                                0, height, 0.0f, // top left
-                                0, 0, 0.0f, // bottom left
-                                0, 0, 0.0f, // bottom left
-                                width, height, 0.0f, // top right
-                                width, 0, 0.0f // bottom right
-                        }
-                );
+                DisplayObject d = new DisplayObject();
+                d.setXYZ(100, 50, 0);
+                DisplayObject m = new DisplayObject();
+                m.setXYZ(600, 0, 0);
+
+                myna.mainScene.addChild(d);
+                myna.mainScene.addChild(m);
             }
         });
-
-        myna.eventDispatcher.addEventListener(Event.ON_DRAW_FRAME, new EventListener() {
-            @Override
-            public void onEvent(IEvent event) {
-                quad.draw();
-            }
-        });
-
     }
 }
 

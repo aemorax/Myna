@@ -86,4 +86,8 @@ public class EventDispatcher {
         dispatchEvent(event);
         Event.toPool(event);
     }
+
+    public void dispose() {
+        this.eventListeners.clear();
+    }
 }
