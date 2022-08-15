@@ -104,4 +104,9 @@ public class DisplayObjectContainer extends EventDispatcher implements Container
         this.children.set(index1, child2);
         this.children.set(index2, child1);
     }
+
+    @Override
+    public ArrayList<Container> getChildren() {
+        return this.children;
+    }
 }

@@ -19,9 +19,6 @@ import com.nevergarden.myna.events.TouchEvent;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private static int width = 1080;
-    private static int height = 1920;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onEvent(IEvent event) {
                 ResizeEventData data = (ResizeEventData) event.getData();
-                width = data.width;
-                height = data.height;
             }
         });
 
@@ -61,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
                 d.setXYZ(100, 50, 0);
                 DisplayObject m = new DisplayObject();
                 m.setXYZ(600, 0, 0);
+
+                DisplayObject c = new DisplayObject();
+                c.setXYZ(1000, 500, 0);
+                d.addChild(c);
 
                 myna.mainScene.addChild(d);
                 myna.mainScene.addChild(m);

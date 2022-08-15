@@ -1,5 +1,7 @@
 package com.nevergarden.myna.interfaces;
 
+import java.util.ArrayList;
+
 public interface Container {
     Container getParent();
     void setParent(Container container);
@@ -15,4 +17,6 @@ public interface Container {
     void removeChildren();
     void swapChildren(Container child1, Container child2);
     void swapChildrenAt(int index1, int index2);
+
+    ArrayList<Container> getChildren();
 }

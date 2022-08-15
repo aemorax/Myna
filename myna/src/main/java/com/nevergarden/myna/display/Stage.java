@@ -5,6 +5,7 @@ import com.nevergarden.myna.interfaces.IDrawable;
 
 import java.util.Objects;
 import java.util.Queue;
+import java.util.Stack;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Stage extends DisplayObjectContainer {
@@ -15,10 +16,17 @@ public class Stage extends DisplayObjectContainer {
     }
 
     public void addAll() {
-        for (Container container: this.children) {
-            if(container instanceof DisplayObject) {
+        Stack<Container> stack = new Stack<>();
+        Container current = this;
+        stack.push(current);
+
+        while(!stack.isEmpty()) {
+            current = stack.pop();
+            for(Container container: current.getChildren()) {
                 DisplayObject c = (DisplayObject) container;
                 this.drawables.add(c.quad);
+                if(container.getChildrenCount() > 0)
+                    stack.push(container);
             }
         }
     }
