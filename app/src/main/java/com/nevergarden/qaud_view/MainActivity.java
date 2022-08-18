@@ -1,13 +1,15 @@
 package com.nevergarden.qaud_view;
 
+import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nevergarden.myna.R;
 import com.nevergarden.myna.core.Myna;
-import com.nevergarden.myna.display.DisplayObject;
 import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventDispatcher;
 import com.nevergarden.myna.events.EventListener;
@@ -15,8 +17,11 @@ import com.nevergarden.myna.events.IEvent;
 import com.nevergarden.myna.events.ResizeEventData;
 import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
+import com.nevergarden.myna.gfx.Color;
+import com.nevergarden.myna.gfx.Quad;
 
 import java.util.Map;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -25,14 +30,28 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SimpleDispatcher d = new SimpleDispatcher();
-        FloatingActionButton fab = findViewById(R.id.eventDispatcher);
-        fab.setOnClickListener(view -> d.dispatchEvent(Event.fromPool("create")));
 
         Myna myna = findViewById(R.id.myna);
         myna.eventDispatcher.addEventListener(Event.RESIZE, new EventListener() {
             @Override
             public void onEvent(IEvent event) {
                 ResizeEventData data = (ResizeEventData) event.getData();
+            }
+        });
+
+        Random r = new Random();
+
+
+        FloatingActionButton fab = findViewById(R.id.eventDispatcher);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Quad q = new Quad(Color.random(), 200, 200);
+                q.x = r.nextInt(myna.getWidth()-200);
+                q.y = r.nextInt(myna.getHeight()-200);
+                Log.d("Sample", ""+q.x + ":" + q.y);
+                q.recalculateMatrix();
+                myna.currentStage.addChild(q);
             }
         });
 
@@ -43,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
                 Map<Integer, Touch> t = touchEvent.getData();
 
                 if(t.containsKey(0)) {
-                    myna.mainScene.removeChildAt(0);
+                    myna.currentStage.removeChildAt(0);
+                    myna.currentStage.setColor(Color.random());
                 }
             }
         });
@@ -52,17 +72,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onEvent(IEvent event) {
-                DisplayObject d = new DisplayObject();
-                d.setXYZ(100, 50, 0);
-                DisplayObject m = new DisplayObject();
-                m.setXYZ(600, 0, 0);
-
-                DisplayObject c = new DisplayObject();
-                c.setXYZ(1000, 500, 0);
-                d.addChild(c);
-
-                myna.mainScene.addChild(d);
-                myna.mainScene.addChild(m);
+                Quad q = new Quad(new Color(100, 200, 0, 255), 200, 200);
+                q.x = 200;
+                q.y = 200;
+                myna.currentStage.addChild(q);
             }
         });
     }

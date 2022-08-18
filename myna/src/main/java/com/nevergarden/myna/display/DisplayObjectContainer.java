@@ -1,112 +1,97 @@
 package com.nevergarden.myna.display;
 
-import com.nevergarden.myna.events.EventDispatcher;
-import com.nevergarden.myna.interfaces.Container;
+import com.nevergarden.myna.BuildConfig;
 
 import java.util.ArrayList;
 
-public class DisplayObjectContainer extends EventDispatcher implements Container {
-    protected final ArrayList<Container> children;
-    private Container parent = null;
+public class DisplayObjectContainer extends DisplayObject {
+    protected final ArrayList<DisplayObject> children;
 
     public DisplayObjectContainer() {
-        this(null);
-    }
-
-    public DisplayObjectContainer(Container parent) {
         super();
-        if(parent!=null)
-            this.parent = parent;
+        if(!BuildConfig.DEBUG)
+            throw new AbstractMethodError();
+
         this.children = new ArrayList<>();
     }
 
-    @Override
-    public Container getParent() {
+    public DisplayObjectContainer getParent() {
         return this.parent;
     }
 
-    @Override
-    public void setParent(Container container) {
+    public void setParent(DisplayObjectContainer container) {
         this.parent = container;
     }
 
-    @Override
     public int getChildrenCount() {
         return this.children.size();
     }
 
-    @Override
-    public Container addChild(Container child) {
+    public DisplayObject addChild(DisplayObject child) {
         if(this.children.contains(child))
             return null;
         this.children.add(child);
+        child.setParent(this);
+        child.recalculateMatrix();
         return child;
     }
 
-    @Override
-    public Container addChildAt(int index, Container child) {
+    public DisplayObject addChildAt(int index, DisplayObject child) {
         if(this.children.contains(child))
             return null;
         this.children.add(index, child);
         child.setParent(this);
+        child.recalculateMatrix();
         return child;
     }
 
-    @Override
-    public Boolean contains(Container child) {
+    public Boolean contains(DisplayObject child) {
         return this.children.contains(child);
     }
 
-    @Override
-    public Container getChildAt(int index) {
+    public DisplayObject getChildAt(int index) {
         return this.children.get(index);
     }
 
-    @Override
-    public Container getChildByName(String name) {
+    public DisplayObject getChildByName(String name) {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public int getChildIndex(Container child) {
+    public int getChildIndex(DisplayObject child) {
         return this.children.indexOf(child);
     }
 
-    @Override
-    public Container removeChild(Container child) {
+    public DisplayObject removeChild(DisplayObject child) {
         if(this.children.remove(child))
             return child;
         return null;
     }
 
-    @Override
-    public Container removeChildAt(int index) {
+    public DisplayObject removeChildAt(int index) {
+        if(this.children.size() == 0)
+            return null;
         return this.children.remove(index);
     }
 
-    @Override
     public void removeChildren() {
         this.children.clear();
     }
 
-    @Override
-    public void swapChildren(Container child1, Container child2) {
+    public void swapChildren(DisplayObject child1, DisplayObject child2) {
         int index1 = this.getChildIndex(child1);
         int index2 = this.getChildIndex(child2);
         this.children.set(index1, child2);
         this.children.set(index2, child1);
     }
 
-    @Override
     public void swapChildrenAt(int index1, int index2) {
-        Container child1 = this.getChildAt(index1);
-        Container child2 = this.getChildAt(index2);
+        DisplayObject child1 = this.getChildAt(index1);
+        DisplayObject child2 = this.getChildAt(index2);
         this.children.set(index1, child2);
         this.children.set(index2, child1);
     }
 
-    @Override
-    public ArrayList<Container> getChildren() {
+    public ArrayList<DisplayObject> getChildren() {
         return this.children;
     }
 }

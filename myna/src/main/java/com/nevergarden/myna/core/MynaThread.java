@@ -6,7 +6,7 @@ import android.view.SurfaceHolder;
 
 public class MynaThread extends Thread {
     Boolean isRunning = true;
-    Boolean cLock = false;
+    Boolean cLock = true;
 
     final Myna mynaInstance;
     final SurfaceHolder surfaceHolder;

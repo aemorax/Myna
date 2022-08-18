@@ -1,37 +1,61 @@
 package com.nevergarden.myna.display;
 
-import com.nevergarden.myna.geom.TransformMatrix;
-import com.nevergarden.myna.gfx.Quad;
-import com.nevergarden.myna.interfaces.Container;
+import android.opengl.Matrix;
+import android.util.Log;
 
-public class DisplayObject extends DisplayObjectContainer {
-    private float x, y, pivotX, pivotY, scaleX, scaleY, skewX, skewY, rotation, alpha;
+import com.nevergarden.myna.events.EventDispatcher;
+import com.nevergarden.myna.interfaces.IDrawable;
+
+import org.joml.Matrix4f;
+
+import java.util.Arrays;
+
+public class DisplayObject extends EventDispatcher implements IDrawable {
+    public float x, y, pivotX, pivotY, scaleX, scaleY, skewX, skewY, rotation, alpha;
     private boolean visible;
 
-    public TransformMatrix localMatrix;
-
-    public Quad quad;
+    protected Matrix4f mainMatrix;
+    protected Matrix4f localMatrix;
+    protected DisplayObjectContainer parent;
 
     public DisplayObject() {
-        this(null);
-    }
-
-    public DisplayObject(Container parent) {
-        super(parent);
         x = y = pivotY = pivotX = rotation = skewX = skewY = 0.0f;
         scaleX = scaleY = alpha = 1.0f;
         visible = true;
-
-        this.localMatrix = new TransformMatrix();
-        this.quad = new Quad(new float[]{1,0,0,1}, 200, 300);
-        this.quad.setMatrix(localMatrix.transform);
+        this.localMatrix = new Matrix4f();
+        this.mainMatrix = new Matrix4f();
+        this.localMatrix.identity();
+        this.mainMatrix.identity();
+        recalculateMatrix();
     }
 
-    public void setXYZ(float x, float y, float z) {
-        this.x = x;
-        this.y = y;
-        this.localMatrix.setTranslation(this.x, this.y, 0);
-        this.localMatrix.calculateMatrix();
-        this.quad.setMatrix(this.localMatrix.transform);
+    protected void recalculateMatrix() {
+        this.localMatrix.identity();
+        if(this.parent != null) {
+            float[] m = new float[16];
+            this.localMatrix.set(3, 0, x);
+            this.localMatrix.set(3, 1, y);
+            this.localMatrix.get(m);
+            Log.d("Myna", "Z " + Arrays.toString(m));
+            Matrix4f x = new Matrix4f();
+            parent.localMatrix.get(x);
+            this.mainMatrix = x.mul(this.localMatrix);
+        }
+        else {
+            this.mainMatrix = this.localMatrix;
+        }
+    }
+
+    public void removeFromParent() {
+        if(parent != null)
+            parent.removeChild(this);
+    }
+
+    public void setParent(DisplayObjectContainer parent) {
+        this.parent = parent;
+    }
+
+    public void draw() {
+        throw new AbstractMethodError();
     }
 }

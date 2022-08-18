@@ -24,15 +24,10 @@ enum MynaPixelFormat {
 }
 
 class MynaConfig {
-    public int width = 800;
-    public int height = 600;
-
     private int redSize = 8;
     private int greenSize = 8;
     private int blueSize = 8;
     private int alphaSize = 8;
-    private int depthSize = 0;
-    private int stencilSize = 0;
 
     private MynaPixelFormat pixelFormat;
 
@@ -64,24 +59,16 @@ class MynaConfig {
     public int getRedSize() {
         return redSize;
     }
-
     public int getGreenSize() {
         return greenSize;
     }
-
     public int getBlueSize() {
         return blueSize;
     }
-
     public int getAlphaSize() {
         return alphaSize;
     }
-
     public int getDepthSize() {
-        return depthSize;
-    }
-
-    public int getStencilSize() {
-        return stencilSize;
+        return 0;
     }
 }

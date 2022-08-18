@@ -15,10 +15,7 @@ import android.view.SurfaceHolder;
 
 import com.nevergarden.myna.R;
 import com.nevergarden.myna.display.Stage;
-import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventDispatcher;
-import com.nevergarden.myna.events.EventListener;
-import com.nevergarden.myna.events.IEvent;
 import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
 
@@ -27,28 +24,19 @@ import java.util.Map;
 public class Myna extends GLSurfaceView {
     public final static String TAG = "Myna";
 
-    public Stage mainScene = new Stage();
+    public Stage currentStage;
 
     public final EventDispatcher eventDispatcher;
-    private final com.nevergarden.myna.gfx.Renderer renderer;
+    public final com.nevergarden.myna.gfx.Renderer renderer;
     private final MynaConfig config = new MynaConfig();
 
     public Myna(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.eventDispatcher = new EventDispatcher();
-
         this.setConfig(attrs);
         this.renderer = new com.nevergarden.myna.gfx.Renderer(this);
         this.setRenderer(this.renderer);
         this.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-
-        this.eventDispatcher.addEventListener(Event.CONTEXT_CREATE, new EventListener() {
-            @Override
-            public void onEvent(IEvent event) {
-
-            }
-        });
-
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -59,17 +47,29 @@ public class Myna extends GLSurfaceView {
             Map<Integer, Touch> touches = Touch.byNativeEvent(event);
             eventDispatcher.dispatchEvent(TouchEvent.fromPool(touches, false));
             performClick();
-            // TODO: write touch handler in a way that can recycle event at the end.
-            // event.recycle();
         }
         return true;
+    }
+
+    public void setCurrentStage(Stage newStage, Boolean dispose) {
+        Stage s = setCurrentStage(newStage);
+        if(dispose) {
+            s.dispose();
+        }
+    }
+
+    public Stage setCurrentStage(Stage newStage) {
+        Stage previousStage = this.currentStage;
+        this.currentStage = newStage;
+        this.currentStage.setSize(this.renderer.getWidth(), this.renderer.getHeight());
+        return previousStage;
     }
 
     public void step() {}
 
     public void render() {
-        mainScene.addAll();
-        mainScene.drawAll();
+        currentStage.addAll();
+        currentStage.drawAll();
         this.requestRender();
     }
 
