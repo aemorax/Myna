@@ -64,7 +64,6 @@ public class Quad extends DisplayObject implements IDrawable {
         super.recalculateMatrix();
         modelMatrix = new float[16];
         this.mainMatrix.get(this.modelMatrix);
-        Log.d("Myna", "Quad:" + Arrays.toString(modelMatrix) + Arrays.toString(Thread.currentThread().getStackTrace()));
     }
 
     @Override

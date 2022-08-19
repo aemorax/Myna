@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.nevergarden.myna.core.Myna;
 import com.nevergarden.myna.events.Event;
-import com.nevergarden.myna.events.EventDispatcher;
 import com.nevergarden.myna.events.EventListener;
 import com.nevergarden.myna.events.IEvent;
 import com.nevergarden.myna.events.ResizeEventData;
@@ -12,22 +11,23 @@ import com.nevergarden.myna.gfx.Color;
 import com.nevergarden.myna.interfaces.IDrawable;
 
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.ConcurrentModificationException;
 import java.util.Queue;
 import java.util.Stack;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Stage extends DisplayObjectContainer {
     private Myna myna;
     private int width;
     private int height;
     private Color color;
+    private boolean requiresRedraw = false;
     private final Queue<IDrawable> drawables;
     public Stage(Myna myna, Color color) {
         super();
         this.myna = myna;
         this.setColor(color);
-        this.drawables = new LinkedBlockingQueue<>();
+        this.drawables = new ConcurrentLinkedQueue<>();
         this.myna.eventDispatcher.addEventListener(Event.RESIZE, new EventListener() {
             @Override
             public void onEvent(IEvent event) {
@@ -36,6 +36,12 @@ public class Stage extends DisplayObjectContainer {
                 resizeAll();
             }
         });
+    }
+
+    public void setRequiresRedraw(boolean requiresRedraw) {
+        this.requiresRedraw = requiresRedraw;
+        if(requiresRedraw)
+            this.addAll();
     }
 
     public void resizeAll() {
@@ -56,15 +62,35 @@ public class Stage extends DisplayObjectContainer {
         }
     }
 
-    public void addAll() {
-        synchronized (this.myna.renderer.thread) {
-            Log.d("Mnnn", ""+this.children.size());
-            Stack<DisplayObjectContainer> stack = new Stack<>();
-            DisplayObjectContainer current = this;
-            stack.push(current);
+    @Override
+    public DisplayObject addChild(DisplayObject child) {
+        DisplayObject o = super.addChild(child);
+        this.setRequiresRedraw(true);
+        return o;
+    }
 
-            while (!stack.isEmpty()) {
-                current = stack.pop();
+    @Override
+    public DisplayObject removeChild(DisplayObject child) {
+        DisplayObject o = super.removeChild(child);
+        this.setRequiresRedraw(true);
+        return o;
+    }
+
+    @Override
+    public DisplayObject removeChildAt(int index) {
+        this.setRequiresRedraw(true);
+        return super.removeChildAt(index);
+    }
+
+    public void addAll() {
+        drawables.clear();
+        Stack<DisplayObjectContainer> stack = new Stack<>();
+        DisplayObjectContainer current = this;
+        stack.push(current);
+
+        while (!stack.isEmpty()) {
+            current = stack.pop();
+            try {
                 for (DisplayObject displayObject : current.getChildren()) {
                     this.drawables.add(displayObject);
                     if (displayObject instanceof DisplayObjectContainer) {
@@ -74,11 +100,16 @@ public class Stage extends DisplayObjectContainer {
                     }
                 }
             }
+            catch (ConcurrentModificationException e) {
+                e.printStackTrace();
+            }
         }
+
+        this.myna.requestRender();
     }
     public void drawAll() {
-        while(!drawables.isEmpty()) {
-            Objects.requireNonNull(drawables.poll()).draw();
+        for (IDrawable drawable: drawables) {
+            drawable.draw();
         }
     }
 
@@ -110,9 +141,8 @@ public class Stage extends DisplayObjectContainer {
 
     private void recalculateStageMatrix() {
         this.localMatrix.identity();
-        this.localMatrix.ortho(0, width, 0, height, -1, 1);
+        this.localMatrix.ortho(0, width, height, 0, -1, 1);
         float[] m = new float[16];
         this.localMatrix.get(m);
-        Log.d("Myna", "Stage: " + Arrays.toString(m) + Arrays.toString(Thread.currentThread().getStackTrace()));
     }
 }

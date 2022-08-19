@@ -21,6 +21,7 @@ import com.nevergarden.myna.gfx.Color;
 import com.nevergarden.myna.gfx.Quad;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,16 +44,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         FloatingActionButton fab = findViewById(R.id.eventDispatcher);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Quad q = new Quad(Color.random(), 200, 200);
-                q.x = r.nextInt(myna.getWidth()-200);
-                q.y = r.nextInt(myna.getHeight()-200);
-                Log.d("Sample", ""+q.x + ":" + q.y);
-                q.recalculateMatrix();
-                myna.currentStage.addChild(q);
-            }
+        fab.setOnClickListener(v -> {
+            Quad q = new Quad(Color.random(), 200, 200);
+            q.x = r.nextInt(myna.getWidth() - 200);
+            q.y = r.nextInt(myna.getHeight() - 200);
+            q.recalculateMatrix();
+            myna.currentStage.addChild(q);
         });
 
         myna.eventDispatcher.addEventListener("touch", new EventListener() {
@@ -62,8 +59,12 @@ public class MainActivity extends AppCompatActivity {
                 Map<Integer, Touch> t = touchEvent.getData();
 
                 if(t.containsKey(0)) {
-                    myna.currentStage.removeChildAt(0);
-                    myna.currentStage.setColor(Color.random());
+                    Quad q = (Quad) myna.currentStage.getChildAt(0);
+                    q.x = Objects.requireNonNull(t.get(0)).getX();
+                    q.y = Objects.requireNonNull(t.get(0)).getY();
+                    q.recalculateMatrix();
+
+                    myna.currentStage.setRequiresRedraw(true);
                 }
             }
         });

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.content.res.TypedArray;
 import android.graphics.PixelFormat;
+import android.opengl.GLES10;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
@@ -15,9 +16,11 @@ import android.view.SurfaceHolder;
 
 import com.nevergarden.myna.R;
 import com.nevergarden.myna.display.Stage;
+import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventDispatcher;
 import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
+import com.nevergarden.myna.gfx.Color;
 
 import java.util.Map;
 
@@ -43,11 +46,9 @@ public class Myna extends GLSurfaceView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        synchronized (this.renderer.thread) {
-            Map<Integer, Touch> touches = Touch.byNativeEvent(event);
-            eventDispatcher.dispatchEvent(TouchEvent.fromPool(touches, false));
-            performClick();
-        }
+        Map<Integer, Touch> touches = Touch.byNativeEvent(event);
+        eventDispatcher.dispatchEvent(TouchEvent.fromPool(touches, false));
+        performClick();
         return true;
     }
 
@@ -68,9 +69,12 @@ public class Myna extends GLSurfaceView {
     public void step() {}
 
     public void render() {
-        currentStage.addAll();
+        Color c = this.currentStage.getColor();
+        GLES10.glClearColor(c.getFRed(), c.getFGreen(), c.getFBlue(), c.getFAlpha());
+        GLES10.glClear(GLES10.GL_COLOR_BUFFER_BIT);
+        this.eventDispatcher.dispatchEventWith(Event.ON_DRAW_FRAME);
         currentStage.drawAll();
-        this.requestRender();
+        currentStage.setRequiresRedraw(false);
     }
 
     public void setConfig(AttributeSet configData) {
@@ -87,10 +91,8 @@ public class Myna extends GLSurfaceView {
         int eglVersion = configurationInfo.reqGlEsVersion;
         if(eglVersion >= 0x30000) {
             this.setEGLContextClientVersion(3);
-            Log.d(TAG, "Using: OpenGLES 3.0");
         } else if(eglVersion >= 0x20000) {
             this.setEGLContextClientVersion(2);
-            Log.d(TAG, "Using: OpenGLES 2.0");
         } else {
             throw new Error("Not Supported EGL version");
         }
@@ -113,12 +115,6 @@ public class Myna extends GLSurfaceView {
             case TRANSPARENT: holder.setFormat(PixelFormat.TRANSPARENT); break;
             case UNKNOWN: holder.setFormat(PixelFormat.UNKNOWN); break;
         }
-
-        Log.d(TAG, "r:" + this.config.getRedSize() +
-                "g:" + this.config.getGreenSize() +
-                "b:" + this.config.getBlueSize() +
-                "a:" + this.config.getAlphaSize()
-        );
 
         GLES20.glEnable(GLES20.GL_CULL_FACE);
         GLES20.glCullFace(GLES20.GL_FRONT);

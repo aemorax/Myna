@@ -36,7 +36,6 @@ public class DisplayObject extends EventDispatcher implements IDrawable {
             this.localMatrix.set(3, 0, x);
             this.localMatrix.set(3, 1, y);
             this.localMatrix.get(m);
-            Log.d("Myna", "Z " + Arrays.toString(m));
             Matrix4f x = new Matrix4f();
             parent.localMatrix.get(x);
             this.mainMatrix = x.mul(this.localMatrix);
