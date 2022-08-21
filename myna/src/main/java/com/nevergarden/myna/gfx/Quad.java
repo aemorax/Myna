@@ -3,6 +3,7 @@ package com.nevergarden.myna.gfx;
 import android.opengl.GLES20;
 import android.util.Log;
 
+import com.nevergarden.myna.core.Myna;
 import com.nevergarden.myna.display.DisplayObject;
 import com.nevergarden.myna.interfaces.IDrawable;
 
@@ -63,11 +64,13 @@ public class Quad extends DisplayObject implements IDrawable {
     public void recalculateMatrix() {
         super.recalculateMatrix();
         modelMatrix = new float[16];
-        this.mainMatrix.get(this.modelMatrix);
+        this.transform.get(this.modelMatrix);
+        Log.d(Myna.TAG, Arrays.toString(modelMatrix));
     }
 
     @Override
     public void draw() {
+        Log.d(Myna.TAG, "Draw");
         program.bind();
         positionHandler = GLES20.glGetAttribLocation(program.nativeProgram, "vPosition");
         GLES20.glEnableVertexAttribArray(positionHandler);

@@ -140,9 +140,10 @@ public class Stage extends DisplayObjectContainer {
     }
 
     private void recalculateStageMatrix() {
-        this.localMatrix.identity();
-        this.localMatrix.ortho(0, width, height, 0, -1, 1);
+        this.transform.identity();
+        this.transform.ortho(0, width, height, 0, -1, 1);
         float[] m = new float[16];
-        this.localMatrix.get(m);
+        this.transform.get(m);
+        Log.d(Myna.TAG, Arrays.toString(m));
     }
 }

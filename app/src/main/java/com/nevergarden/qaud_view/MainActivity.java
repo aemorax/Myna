@@ -1,11 +1,9 @@
 package com.nevergarden.qaud_view;
 
-import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nevergarden.myna.R;
@@ -21,7 +19,6 @@ import com.nevergarden.myna.gfx.Color;
 import com.nevergarden.myna.gfx.Quad;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,11 +43,13 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.eventDispatcher);
         fab.setOnClickListener(v -> {
             Quad q = new Quad(Color.random(), 200, 200);
-            q.x = r.nextInt(myna.getWidth() - 200);
-            q.y = r.nextInt(myna.getHeight() - 200);
-            q.recalculateMatrix();
+            q.setPosition(r.nextInt(myna.getWidth()-200), r.nextInt(myna.getHeight()-200));
             myna.currentStage.addChild(q);
         });
+
+        final float[] scaleX = {1};
+        final float[] scaleY = {1};
+        final float[] addM = {0.1f};
 
         myna.eventDispatcher.addEventListener("touch", new EventListener() {
             @Override
@@ -60,11 +59,21 @@ public class MainActivity extends AppCompatActivity {
 
                 if(t.containsKey(0)) {
                     Quad q = (Quad) myna.currentStage.getChildAt(0);
-                    q.x = Objects.requireNonNull(t.get(0)).getX();
-                    q.y = Objects.requireNonNull(t.get(0)).getY();
-                    q.recalculateMatrix();
-
-                    myna.currentStage.setRequiresRedraw(true);
+                    Touch to = t.get(0);
+                    if(to!=null) {
+                        Log.d(Myna.TAG, to.toString());
+                        q.setPosition(to.getX(), to.getY());
+                        scaleX[0] += addM[0];
+                        scaleY[0] += addM[0];
+                        if(scaleX[0] > 2) {
+                            addM[0] = -0.1f;
+                        } else if (scaleX[0] < 1) {
+                            addM[0] = 0.1f;
+                        }
+                        q.setScale(scaleX[0], scaleY[0]);
+                        q.rotate(0.1f);
+                        myna.currentStage.setRequiresRedraw(true);
+                    }
                 }
             }
         });
@@ -74,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onEvent(IEvent event) {
                 Quad q = new Quad(new Color(100, 200, 0, 255), 200, 200);
-                q.x = 200;
-                q.y = 200;
+                q.setPivot(100, 100);
+                q.setPosition(200, 200);
                 myna.currentStage.addChild(q);
             }
         });

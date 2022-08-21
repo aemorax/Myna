@@ -59,6 +59,8 @@ public class Touch {
                     t.index = index;
                     t.lastX = 0;
                     t.lastY = 0;
+                    t.x = event.getX();
+                    t.y = event.getY();
                     t.pressure = event.getPressure();
                     t.downTime = event.getDownTime();
                     t.lastMoveTime = event.getEventTime();
