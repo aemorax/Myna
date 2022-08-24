@@ -10,7 +10,6 @@ import android.opengl.GLES10;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
@@ -21,6 +20,7 @@ import com.nevergarden.myna.events.EventDispatcher;
 import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
 import com.nevergarden.myna.gfx.Color;
+import com.nevergarden.myna.util.AssetManager;
 
 import java.util.Map;
 
@@ -28,6 +28,7 @@ public class Myna extends GLSurfaceView {
     public final static String TAG = "Myna";
 
     public Stage currentStage;
+    public final AssetManager assetManager;
 
     public final EventDispatcher eventDispatcher;
     public final com.nevergarden.myna.gfx.Renderer renderer;
@@ -35,6 +36,7 @@ public class Myna extends GLSurfaceView {
 
     public Myna(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.assetManager = new AssetManager(this);
         this.eventDispatcher = new EventDispatcher();
         this.setConfig(attrs);
         this.renderer = new com.nevergarden.myna.gfx.Renderer(this);
@@ -119,5 +121,8 @@ public class Myna extends GLSurfaceView {
         GLES20.glEnable(GLES20.GL_CULL_FACE);
         GLES20.glCullFace(GLES20.GL_FRONT);
         GLES20.glFrontFace(GLES20.GL_CCW);
+
+        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+        GLES20.glEnable(GLES20.GL_BLEND);
     }
 }

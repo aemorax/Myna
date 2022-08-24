@@ -19,7 +19,7 @@ public class Quad extends DisplayObject implements IDrawable {
             "void main() { gl_Position = uModel * vec4(vPosition,1.0); }";
 
     private final String fragmentShader =
-            "precision mediump float; uniform vec4 vColor; void main() { gl_FragColor = vColor; }";
+            "precision mediump float; uniform vec4 uColor; void main() { gl_FragColor = uColor; }";
 
     private static GLProgram program = null;
 
@@ -74,13 +74,13 @@ public class Quad extends DisplayObject implements IDrawable {
         program.bind();
         positionHandler = GLES20.glGetAttribLocation(program.nativeProgram, "vPosition");
         GLES20.glEnableVertexAttribArray(positionHandler);
-        GLES20.glVertexAttribPointer(positionHandler, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, VERTEX_STRIDE, vertexBuffer);
+        GLES20.glVertexAttribPointer(positionHandler, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, vertexBuffer);
 
         modelHandler = GLES20.glGetUniformLocation(program.nativeProgram, "uModel");
 
         GLES20.glUniformMatrix4fv(modelHandler, 1, false, this.modelMatrix, 0);
 
-        colorHandler = GLES20.glGetUniformLocation(program.nativeProgram, "vColor");
+        colorHandler = GLES20.glGetUniformLocation(program.nativeProgram, "uColor");
         GLES20.glUniform4fv(colorHandler, 1, quadColor.getColorRGBAV(), 0);
 
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, VERTEX_COUNT);

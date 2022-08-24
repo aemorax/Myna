@@ -17,6 +17,8 @@ import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
 import com.nevergarden.myna.gfx.Color;
 import com.nevergarden.myna.gfx.Quad;
+import com.nevergarden.myna.gfx.Sprite;
+import com.nevergarden.myna.gfx.Texture;
 
 import java.util.Map;
 import java.util.Random;
@@ -63,14 +65,6 @@ public class MainActivity extends AppCompatActivity {
                     if(to!=null) {
                         Log.d(Myna.TAG, to.toString());
                         q.setPosition(to.getX(), to.getY());
-                        scaleX[0] += addM[0];
-                        scaleY[0] += addM[0];
-                        if(scaleX[0] > 2) {
-                            addM[0] = -0.1f;
-                        } else if (scaleX[0] < 1) {
-                            addM[0] = 0.1f;
-                        }
-                        q.setScale(scaleX[0], scaleY[0]);
                         q.rotate(0.1f);
                         myna.currentStage.setRequiresRedraw(true);
                     }
@@ -85,7 +79,11 @@ public class MainActivity extends AppCompatActivity {
                 Quad q = new Quad(new Color(100, 200, 0, 255), 200, 200);
                 q.setPivot(100, 100);
                 q.setPosition(200, 200);
-                myna.currentStage.addChild(q);
+
+                Texture t = myna.assetManager.loadTexture(R.drawable.pngegg);
+                Sprite s = new Sprite(t, new Color(255, 255, 255, 255));
+                s.setPivot(150, 150);
+                myna.currentStage.addChild(s);
             }
         });
     }
