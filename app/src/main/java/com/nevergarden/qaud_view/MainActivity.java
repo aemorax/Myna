@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nevergarden.myna.R;
 import com.nevergarden.myna.core.Myna;
+import com.nevergarden.myna.ds.texturepacker.TPAtlas;
 import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventListener;
 import com.nevergarden.myna.events.IEvent;
@@ -15,6 +16,7 @@ import com.nevergarden.myna.events.TouchEvent;
 import com.nevergarden.myna.gfx.Color;
 import com.nevergarden.myna.gfx.Quad;
 import com.nevergarden.myna.gfx.Sprite;
+import com.nevergarden.myna.gfx.TPSpriteAnimation;
 import com.nevergarden.myna.gfx.Texture;
 
 import java.util.Map;
@@ -47,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
                     Touch to = t.get(0);
                     if(to!=null) {
                         q.setPosition(to.getX(), to.getY());
-                        q.rotate(0.1f);
                         myna.currentStage.setRequiresRedraw(true);
                     }
                 }
@@ -58,6 +59,15 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onEvent(IEvent event) {
+
+                myna.currentStage.setColor(new Color(64,90,115,255));
+
+                TPAtlas tpAtlas = myna.assetManager.loadTexturePackerJsonAtlas(R.drawable.bouncing_glass, R.raw.bouncing_glass);
+                TPSpriteAnimation spriteAnimation = new TPSpriteAnimation(tpAtlas, new Color(1f,1f,1f,1f), 32, 32);
+                spriteAnimation.setPivot(16,16);
+                spriteAnimation.setScale(20, 20);
+                myna.currentStage.addChild(spriteAnimation);
+
                 Texture t = myna.assetManager.loadTexture(R.drawable.pngegg);
                 Sprite s = new Sprite(t, new Color(255, 255, 255, 255));
                 s.setPivot(150, 150);

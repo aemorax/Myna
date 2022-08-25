@@ -14,13 +14,19 @@ public class Quad extends DisplayObject implements IDrawable {
     private static GLProgram program = null;
 
     private final FloatBuffer vertexBuffer;
-    private final Color quadColor;
+    protected final Color color;
+
+    protected final float width;
+    protected final float height;
 
     public float[] modelMatrix;
 
     public Quad(Color color, float width, float height) {
         super();
-        this.quadColor = color;
+        this.color = color;
+        this.width = width;
+        this.height = height;
+
         float[] quadVertices = new float[]{
                 width, height, 0,
                 0, height, 0,
@@ -62,7 +68,7 @@ public class Quad extends DisplayObject implements IDrawable {
         GLES20.glVertexAttribPointer(positionHandler, 3, GLES20.GL_FLOAT, false, 0, vertexBuffer);
 
         GLES20.glUniformMatrix4fv(modelHandler, 1, false, this.modelMatrix, 0);
-        GLES20.glUniform4fv(colorHandler, 1, quadColor.getColorRGBAV(), 0);
+        GLES20.glUniform4fv(colorHandler, 1, color.getColorRGBAV(), 0);
 
         // Draw 6 element of vertex array
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
