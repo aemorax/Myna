@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
                     Touch to = t.get(0);
                     if(to!=null) {
                         q.setPosition(to.getX(), to.getY());
-                        myna.currentStage.setRequiresRedraw(true);
                     }
                 }
             }

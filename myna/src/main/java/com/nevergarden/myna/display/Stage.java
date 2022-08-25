@@ -1,7 +1,6 @@
 package com.nevergarden.myna.display;
 
 import android.opengl.GLES20;
-import android.util.Log;
 
 import com.nevergarden.myna.core.Myna;
 import com.nevergarden.myna.events.Event;
@@ -11,7 +10,6 @@ import com.nevergarden.myna.events.ResizeEventData;
 import com.nevergarden.myna.gfx.Color;
 import com.nevergarden.myna.interfaces.IDrawable;
 
-import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.Queue;
 import java.util.Stack;
@@ -105,8 +103,6 @@ public class Stage extends DisplayObjectContainer {
                 e.printStackTrace();
             }
         }
-
-        this.myna.requestRender();
     }
     public void drawAll() {
         GLES20.glCullFace(GLES20.GL_FRONT);
@@ -153,6 +149,5 @@ public class Stage extends DisplayObjectContainer {
         this.transform.ortho(0, width, height, 0, -1, 1);
         float[] m = new float[16];
         this.transform.get(m);
-        Log.d(Myna.TAG, Arrays.toString(m));
     }
 }

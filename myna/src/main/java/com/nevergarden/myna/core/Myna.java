@@ -75,6 +75,7 @@ public class Myna extends GLSurfaceView {
         GLES10.glClear(GLES10.GL_COLOR_BUFFER_BIT);
         this.eventDispatcher.dispatchEventWith(Event.ON_DRAW_FRAME);
         currentStage.drawAll();
+        GLES10.glFinish();
         currentStage.setRequiresRedraw(false);
     }
 
