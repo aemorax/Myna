@@ -1,5 +1,5 @@
 package com.nevergarden.myna.interfaces;
 
 public interface IDrawable {
-    public void draw();
+    public void draw(int frame);
 }

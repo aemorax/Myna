@@ -12,6 +12,7 @@ import java.nio.FloatBuffer;
 public class TPSpriteAnimation extends Quad {
     public final int frameCount;
     public int currentFrame = 0;
+    private int frameRate = 24;
     private static GLProgram program = null;
 
     private final FloatBuffer vertexBuffer;
@@ -19,9 +20,13 @@ public class TPSpriteAnimation extends Quad {
 
     private final TPAtlas atlas;
     public TPSpriteAnimation(TPAtlas atlas, Color color, int width, int height) {
+        this(atlas, color, width, height, 24);
+    }
+    public TPSpriteAnimation(TPAtlas atlas, Color color, int width, int height, int frameRate) {
         super(color, width, height);
         this.atlas = atlas;
         this.frameCount = atlas.atlasInfo.frames.length;
+        this.frameRate = frameRate;
 
         // TR->TL->BL->BR->TR
         float[] vertexPoints = new float[] {
@@ -31,22 +36,6 @@ public class TPSpriteAnimation extends Quad {
                 width, 0, 0,
                 width, height, 0,
         };
-
-        /*
-
-        float xmin = 0;
-        float ymin = 0;
-        float xmax = 1;
-        float ymax = 1;
-
-        float[] androidPoints = new float[] {
-                xmax,ymax,
-                xmin,ymax,
-                xmin,ymin,
-                xmax,ymin,
-                xmax,ymax
-        };
-         */
 
         int texCoordinationCount = atlas.atlasInfo.frames.length * 10;
         float[] texCoordinationPoints = new float[texCoordinationCount];
@@ -96,7 +85,8 @@ public class TPSpriteAnimation extends Quad {
     }
 
     @Override
-    public void draw() {
+    public void draw(int frame) {
+
         // Setup Shader
         program.bind();
         int positionHandler = GLES20.glGetAttribLocation(program.nativeProgram, "aPosition");
@@ -111,7 +101,8 @@ public class TPSpriteAnimation extends Quad {
         // Set vertex and texture buffers
         GLES20.glVertexAttribPointer(positionHandler, 3, GLES20.GL_FLOAT, false, 0, vertexBuffer);
         textureCoordinationBuffer.position((currentFrame%frameCount)*10);
-        currentFrame++;
+        if(frame % frameRate == 0)
+            currentFrame++;
         GLES20.glVertexAttribPointer(texCoordinationHandler, 2, GLES20.GL_FLOAT, false, 0, textureCoordinationBuffer);
 
         // Set transform matrix

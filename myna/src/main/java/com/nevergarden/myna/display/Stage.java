@@ -112,7 +112,7 @@ public class Stage extends DisplayObjectContainer {
         GLES20.glEnable(GLES20.GL_CULL_FACE);
         GLES20.glEnable(GLES20.GL_BLEND);
         for (IDrawable drawable: drawables) {
-            drawable.draw();
+            drawable.draw(this.myna.renderer.getCounter());
         }
         GLES20.glDisable(GLES20.GL_CULL_FACE);
         GLES20.glDisable(GLES20.GL_BLEND);

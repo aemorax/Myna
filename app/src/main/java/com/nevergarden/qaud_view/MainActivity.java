@@ -62,15 +62,11 @@ public class MainActivity extends AppCompatActivity {
                 myna.currentStage.setColor(new Color(64,90,115,255));
 
                 TPAtlas tpAtlas = myna.assetManager.loadTexturePackerJsonAtlas(R.drawable.bouncing_glass, R.raw.bouncing_glass);
-                TPSpriteAnimation spriteAnimation = new TPSpriteAnimation(tpAtlas, new Color(1f,1f,1f,1f), 32, 32);
+                TPSpriteAnimation spriteAnimation = new TPSpriteAnimation(tpAtlas, new Color(1f,1f,1f,1f), 32, 32, 2);
                 spriteAnimation.setPivot(16,16);
                 spriteAnimation.setScale(20, 20);
+                spriteAnimation.setPosition((int) (myna.getWidth()/2), (int) (myna.getHeight()/2));
                 myna.currentStage.addChild(spriteAnimation);
-
-                Texture t = myna.assetManager.loadTexture(R.drawable.pngegg);
-                Sprite s = new Sprite(t, new Color(255, 255, 255, 255));
-                s.setPivot(150, 150);
-                myna.currentStage.addChild(s);
             }
         });
     }
