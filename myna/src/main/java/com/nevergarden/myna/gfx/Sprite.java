@@ -69,7 +69,7 @@ public class Sprite extends Quad {
     }
 
     @Override
-    public void draw() {
+    public void draw(int frame) {
         // Setup Shader
         program.bind();
         int positionHandler = GLES20.glGetAttribLocation(program.nativeProgram, "aPosition");

@@ -46,7 +46,7 @@ public class DisplayObject extends EventDispatcher implements IDrawable {
         this.parent = parent;
     }
 
-    public void draw() {
+    public void draw(int frame) {
         throw new AbstractMethodError();
     }
 
