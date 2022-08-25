@@ -8,14 +8,19 @@ import android.opengl.GLUtils;
 import com.nevergarden.myna.core.Myna;
 import com.nevergarden.myna.gfx.Texture;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AssetManager {
     private final Myna myna;
-
+    private final Map<Integer, Texture> textures = new HashMap<>();
     public AssetManager(Myna myna) {
         this.myna = myna;
     }
 
     public Texture loadTexture(int resourceId) {
+        if(textures.containsKey(resourceId))
+            return textures.get(resourceId);
         int[] textureHandle = new int[1];
         GLES20.glGenTextures(1, textureHandle, 0);
 
@@ -34,6 +39,9 @@ public class AssetManager {
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap, 0);
         bitmap.recycle();
 
-        return new Texture(textureHandle[0], bitmap.getWidth(), bitmap.getHeight());
+        Texture t = new Texture(textureHandle[0], bitmap.getWidth(), bitmap.getHeight());
+        this.textures.put(resourceId, t);
+
+        return t;
     }
 }

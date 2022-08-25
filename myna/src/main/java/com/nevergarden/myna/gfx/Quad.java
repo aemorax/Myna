@@ -1,62 +1,46 @@
 package com.nevergarden.myna.gfx;
 
 import android.opengl.GLES20;
-import android.util.Log;
 
-import com.nevergarden.myna.core.Myna;
 import com.nevergarden.myna.display.DisplayObject;
 import com.nevergarden.myna.interfaces.IDrawable;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.Arrays;
 
 public class Quad extends DisplayObject implements IDrawable {
-    private final String vertexShader =
-            "attribute vec3 vPosition;" +
-            "uniform mat4 uModel;" +
-            "void main() { gl_Position = uModel * vec4(vPosition,1.0); }";
-
-    private final String fragmentShader =
-            "precision mediump float; uniform vec4 uColor; void main() { gl_FragColor = uColor; }";
 
     private static GLProgram program = null;
 
-    private int positionHandler;
-
-    private int modelHandler;
-
-    private int colorHandler;
-    private static int COORDS_PER_VERTEX = 3;
-    private final int VERTEX_COUNT = 6;
-    private final int VERTEX_STRIDE = COORDS_PER_VERTEX * 4;
-
-    private FloatBuffer vertexBuffer;
-    private float[] quadCoords;
-    private Color quadColor;
+    private final FloatBuffer vertexBuffer;
+    private final Color quadColor;
 
     public float[] modelMatrix;
 
     public Quad(Color color, float width, float height) {
         super();
         this.quadColor = color;
-        this.quadCoords = new float[] {
-                width, height, 0f, // top right
-                0, height, 0.0f, // top left
-                0, 0, 0.0f, // bottom left
-                0, 0, 0.0f, // bottom left
-                width, height, 0.0f, // top right
-                width, 0, 0.0f // bottom right
+        float[] quadVertices = new float[]{
+                width, height, 0,
+                0, height, 0,
+                0, 0, 0,
+                width, height, 0,
+                0, 0, 0,
+                width, 0, 0
         };
 
         if(program == null) {
+            String vertexShader = "attribute vec3 aPosition;" +
+                    "uniform mat4 uModel;" +
+                    "void main() { gl_Position = uModel * vec4(aPosition,1.0); }";
+            String fragmentShader = "precision mediump float; uniform vec4 uColor; void main() { gl_FragColor = uColor; }";
             program = GLProgram.createProgramFromSource(vertexShader, fragmentShader);
         }
-        ByteBuffer bb = ByteBuffer.allocateDirect(quadCoords.length*4);
+        ByteBuffer bb = ByteBuffer.allocateDirect(quadVertices.length*4);
         bb.order(ByteOrder.nativeOrder());
         vertexBuffer = bb.asFloatBuffer();
-        vertexBuffer.put(quadCoords);
+        vertexBuffer.put(quadVertices);
         vertexBuffer.position(0);
     }
 
@@ -65,25 +49,25 @@ public class Quad extends DisplayObject implements IDrawable {
         super.recalculateMatrix();
         modelMatrix = new float[16];
         this.transform.get(this.modelMatrix);
-        Log.d(Myna.TAG, Arrays.toString(modelMatrix));
     }
 
     @Override
     public void draw() {
-        Log.d(Myna.TAG, "Draw");
         program.bind();
-        positionHandler = GLES20.glGetAttribLocation(program.nativeProgram, "vPosition");
-        GLES20.glEnableVertexAttribArray(positionHandler);
-        GLES20.glVertexAttribPointer(positionHandler, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, vertexBuffer);
+        int positionHandler = GLES20.glGetAttribLocation(program.nativeProgram, "vPosition");
+        int modelHandler = GLES20.glGetUniformLocation(program.nativeProgram, "uModel");
+        int colorHandler = GLES20.glGetUniformLocation(program.nativeProgram, "uColor");
 
-        modelHandler = GLES20.glGetUniformLocation(program.nativeProgram, "uModel");
+        GLES20.glEnableVertexAttribArray(positionHandler);
+        GLES20.glVertexAttribPointer(positionHandler, 3, GLES20.GL_FLOAT, false, 0, vertexBuffer);
 
         GLES20.glUniformMatrix4fv(modelHandler, 1, false, this.modelMatrix, 0);
-
-        colorHandler = GLES20.glGetUniformLocation(program.nativeProgram, "uColor");
         GLES20.glUniform4fv(colorHandler, 1, quadColor.getColorRGBAV(), 0);
 
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, VERTEX_COUNT);
+        // Draw 6 element of vertex array
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
+
+        // Clean up
         GLES20.glDisableVertexAttribArray(positionHandler);
         program.unbind();
     }

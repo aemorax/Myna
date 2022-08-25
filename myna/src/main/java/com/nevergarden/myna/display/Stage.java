@@ -1,5 +1,6 @@
 package com.nevergarden.myna.display;
 
+import android.opengl.GLES20;
 import android.util.Log;
 
 import com.nevergarden.myna.core.Myna;
@@ -17,7 +18,7 @@ import java.util.Stack;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Stage extends DisplayObjectContainer {
-    private Myna myna;
+    private final Myna myna;
     private int width;
     private int height;
     private Color color;
@@ -108,9 +109,17 @@ public class Stage extends DisplayObjectContainer {
         this.myna.requestRender();
     }
     public void drawAll() {
+        GLES20.glCullFace(GLES20.GL_FRONT);
+        GLES20.glFrontFace(GLES20.GL_CCW);
+        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+
+        GLES20.glEnable(GLES20.GL_CULL_FACE);
+        GLES20.glEnable(GLES20.GL_BLEND);
         for (IDrawable drawable: drawables) {
             drawable.draw();
         }
+        GLES20.glDisable(GLES20.GL_CULL_FACE);
+        GLES20.glDisable(GLES20.GL_BLEND);
     }
 
     public Color getColor() {

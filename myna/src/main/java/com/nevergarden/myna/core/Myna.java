@@ -7,7 +7,6 @@ import android.content.pm.ConfigurationInfo;
 import android.content.res.TypedArray;
 import android.graphics.PixelFormat;
 import android.opengl.GLES10;
-import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -117,12 +116,5 @@ public class Myna extends GLSurfaceView {
             case TRANSPARENT: holder.setFormat(PixelFormat.TRANSPARENT); break;
             case UNKNOWN: holder.setFormat(PixelFormat.UNKNOWN); break;
         }
-
-        GLES20.glEnable(GLES20.GL_CULL_FACE);
-        GLES20.glCullFace(GLES20.GL_FRONT);
-        GLES20.glFrontFace(GLES20.GL_CCW);
-
-        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-        GLES20.glEnable(GLES20.GL_BLEND);
     }
 }
