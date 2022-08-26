@@ -20,7 +20,7 @@ public class TouchEvent extends Event implements IEvent {
 
     public static IEvent fromPool(Map<Integer, Touch> touches, Boolean bubbles) {
         if(!TouchEvent.sEventPool.isEmpty()) {
-            return TouchEvent.sEventPool.remove(0).reset("touch", bubbles, touches);
+            return TouchEvent.sEventPool.remove(0).reset(Event.TOUCH, bubbles, touches);
         }
         return new TouchEvent("touch",touches, bubbles);
     }

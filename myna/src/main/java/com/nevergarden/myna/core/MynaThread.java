@@ -11,12 +11,12 @@ public class MynaThread extends Thread {
     }
     public void run() {
         while(isRunning) {
-            this.mina.step();
-            this.mina.requestRender();
             long loopStart = System.currentTimeMillis();
             int FPS = (1000 / 60);
             if (loopRunTime < FPS) {
                 try {
+                    this.mina.update(loopRunTime);
+                    this.mina.requestRender();
                     Thread.sleep(FPS - loopRunTime);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

@@ -38,7 +38,6 @@ public class DisplayObject extends EventDispatcher implements IDrawable {
         this.transform.rotate(this.rotation, this.transform);
         this.transform.scale(this.scale, this.transform);
         this.transform.translate(-this.pivot.x, -this.pivot.y, -this.pivot.z, this.transform);
-        this.dispatchEventWith(Event.TRANSFORM_CHANGE);
     }
 
     public void removeFromParent() {
