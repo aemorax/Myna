@@ -67,7 +67,7 @@ public class Myna extends GLSurfaceView {
         return previousStage;
     }
 
-    public void step() {}
+    public void update(long deltaTime) {}
 
     public void render() {
         Color c = this.currentStage.getColor();

@@ -7,6 +7,7 @@ public class Event implements IEvent {
     public static final String ON_DRAW_FRAME = "on_draw_frame";
     public static final String RESIZE = "resize";
     public static final String TRANSFORM_CHANGE = "transform_change";
+    public static final String TOUCH = "touch";
 
     protected final static ArrayList<IEvent> sEventPool = new ArrayList<>();
     protected String type;

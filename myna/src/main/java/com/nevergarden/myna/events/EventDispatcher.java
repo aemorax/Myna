@@ -6,15 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-// import java.util.Stack;
 
 public class EventDispatcher {
     protected Map<String, ArrayList<EventListener>> eventListeners = new HashMap<>();
-    // final private Stack<String> _eventStack = new Stack<>();
 
-    public EventDispatcher() {
-
-    }
+    public EventDispatcher() {}
 
     public void addEventListener(String type, EventListener listener) {
         ArrayList<EventListener> eventListeners = this.eventListeners.get(type);
