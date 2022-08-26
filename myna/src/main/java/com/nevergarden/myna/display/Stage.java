@@ -130,16 +130,16 @@ public class Stage extends DisplayObjectContainer {
 
     public void setWidth(int newWidth) {
         this.width = newWidth;
-        recalculateStageMatrix();
+        recalculateMatrix();
     }
     public void setHeight(int newHeight) {
         this.height = newHeight;
-        recalculateStageMatrix();
+        recalculateMatrix();
     }
     public void setSize(int newWidth, int newHeight) {
         this.width = newWidth;
         this.height = newHeight;
-        recalculateStageMatrix();
+        recalculateMatrix();
     }
 
     public View getView() {
@@ -153,7 +153,7 @@ public class Stage extends DisplayObjectContainer {
             @Override
             public void onEvent(IEvent event) {
                 EventListener.super.onEvent(event);
-                recalculateStageMatrix();
+                recalculateMatrix();
             }
         });
         this.view = view;
@@ -162,6 +162,7 @@ public class Stage extends DisplayObjectContainer {
     @Override
     protected void recalculateMatrix() {
         recalculateStageMatrix();
+        this.dispatchEventWith(Event.TRANSFORM_CHANGE);
     }
 
     private void recalculateStageMatrix() {

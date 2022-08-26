@@ -16,10 +16,8 @@ import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
 import com.nevergarden.myna.events.TouchPhase;
 import com.nevergarden.myna.gfx.Color;
-import com.nevergarden.myna.gfx.Quad;
 import com.nevergarden.myna.gfx.Sprite;
 import com.nevergarden.myna.gfx.TPSpriteAnimation;
-import com.nevergarden.myna.gfx.Texture;
 import com.nevergarden.myna.math.Vector3f;
 
 import java.util.Map;
@@ -50,12 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
                 if(t.containsKey(0)) {
                     Touch to = t.get(0);
-                    /*
-                    Quad q = (Quad) myna.currentStage.getChildAt(0);
-                    if(to!=null) {
-                        q.setPosition(to.getX(), to.getY());
-                    }
-                     */
                     assert to != null;
                     if(to.getPhase() == TouchPhase.MOVED) {
                         View view = myna.currentStage.getView();
@@ -82,6 +74,20 @@ public class MainActivity extends AppCompatActivity {
                 spriteAnimation.setScale(20, 20);
                 spriteAnimation.setPosition((int) (myna.getWidth()/2), (int) (myna.getHeight()/2));
                 myna.currentStage.addChild(spriteAnimation);
+
+                TPSpriteAnimation spriteAnimation1 = new TPSpriteAnimation(tpAtlas, new Color(1f,1f,1f,1f), 32, 32, 1);
+                spriteAnimation1.setPivot(16,16);
+                spriteAnimation1.setScale(20, 20);
+                spriteAnimation1.setPosition(myna.getWidth(), myna.getHeight());
+                myna.currentStage.addChild(spriteAnimation1);
+
+                Sprite s = new Sprite(myna.assetManager.loadTexture(R.drawable.pngegg), new Color(1f,1f,1f,1f));
+                s.setPosition(r.nextInt(myna.getWidth()-200), r.nextInt(myna.getHeight()-200));
+                myna.currentStage.addChild(s);
+
+                s = new Sprite(myna.assetManager.loadTexture(R.drawable.pngegg), new Color(1f,1f,1f,1f));
+                s.setPosition(r.nextInt(myna.getWidth()-200), r.nextInt(myna.getHeight()-200));
+                myna.currentStage.addChild(s);
             }
         });
     }
