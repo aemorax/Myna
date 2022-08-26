@@ -1,6 +1,7 @@
 package com.nevergarden.myna.display;
 
 import android.opengl.GLES20;
+import android.util.Log;
 
 import com.nevergarden.myna.core.Myna;
 import com.nevergarden.myna.events.Event;
@@ -22,6 +23,7 @@ public class Stage extends DisplayObjectContainer {
     private Color color;
     private boolean requiresRedraw = false;
     private final Queue<IDrawable> drawables;
+    private View view;
     public Stage(Myna myna, Color color) {
         super();
         this.myna = myna;
@@ -35,6 +37,7 @@ public class Stage extends DisplayObjectContainer {
                 resizeAll();
             }
         });
+        this.setView(new View());
     }
 
     public void setRequiresRedraw(boolean requiresRedraw) {
@@ -139,6 +142,23 @@ public class Stage extends DisplayObjectContainer {
         recalculateStageMatrix();
     }
 
+    public View getView() {
+        return this.view;
+    }
+
+    public void setView(View view) {
+        if(this.view != null)
+            this.view.removeEventListeners(Event.TRANSFORM_CHANGE);
+        view.addEventListener(Event.TRANSFORM_CHANGE, new EventListener() {
+            @Override
+            public void onEvent(IEvent event) {
+                EventListener.super.onEvent(event);
+                recalculateStageMatrix();
+            }
+        });
+        this.view = view;
+    }
+
     @Override
     protected void recalculateMatrix() {
         recalculateStageMatrix();
@@ -147,7 +167,7 @@ public class Stage extends DisplayObjectContainer {
     private void recalculateStageMatrix() {
         this.transform.identity();
         this.transform.ortho(0, width, height, 0, -1, 1);
-        float[] m = new float[16];
-        this.transform.get(m);
+        this.transform.mul(this.view.transform);
+        Log.d(Myna.TAG, this.transform.toString());
     }
 }
