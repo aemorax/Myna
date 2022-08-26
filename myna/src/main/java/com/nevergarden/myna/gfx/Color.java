@@ -3,6 +3,7 @@ package com.nevergarden.myna.gfx;
 import java.util.Random;
 
 public class Color {
+    public static final Color WHITE = new Color(1f,1f,1f,1f);
     private int r = 0;
     private int g = 0;
     private int b = 0;
