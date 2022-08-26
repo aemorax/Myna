@@ -169,6 +169,5 @@ public class Stage extends DisplayObjectContainer {
         this.transform.identity();
         this.transform.ortho(0, width, height, 0, -1, 1);
         this.transform.mul(this.view.transform);
-        Log.d(Myna.TAG, this.transform.toString());
     }
 }

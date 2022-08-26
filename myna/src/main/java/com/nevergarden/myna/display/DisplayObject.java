@@ -111,4 +111,8 @@ public class DisplayObject extends EventDispatcher implements IDrawable {
         this.scale.y = y;
         this.recalculateMatrix();
     }
+
+    public com.nevergarden.myna.math.Vector3f getPosition() {
+        return new com.nevergarden.myna.math.Vector3f(this.position.x, this.position.y, 0);
+    }
 }
