@@ -14,8 +14,10 @@ import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
 import com.nevergarden.myna.events.TouchPhase;
 import com.nevergarden.myna.gfx.Color;
+import com.nevergarden.myna.gfx.Quad;
 import com.nevergarden.myna.gfx.Sprite;
 import com.nevergarden.myna.gfx.TPSpriteAnimation;
+import com.nevergarden.myna.gfx.Texture;
 import com.nevergarden.myna.math.Vector3f;
 
 import java.util.Map;
@@ -36,45 +38,58 @@ public class MynaNinjaGame extends Myna {
 
                 if(t.containsKey(0)) {
                     Touch to = t.get(0);
-                    assert to != null;
-                    if(to.getPhase() == TouchPhase.MOVED) {
-                        View view = currentStage.getView();
-                        Vector3f v = view.getPosition();
-                        v.x += to.getX() - to.getLastX();
-                        v.y += to.getY() - to.getLastY();
-                        view.setPosition(v.x, v.y);
-                    }
                 }
             }
         });
+
+        final float[] scaleFactor = {1};
 
         this.eventDispatcher.addEventListener(Event.CONTEXT_CREATE, new EventListener() {
 
             @Override
             public void onEvent(IEvent event) {
 
-                currentStage.setColor(new Color(64,90,115,255));
+                currentStage.setColor(new Color(53,51,65,255));
+                scaleFactor[0] = getWidth()/180f;
 
-                TPAtlas tpAtlas = assetManager.loadTexturePackerJsonAtlas(R.drawable.bouncing_glass, R.raw.bouncing_glass);
-                TPSpriteAnimation spriteAnimation = new TPSpriteAnimation(tpAtlas, new Color(1f,1f,1f,1f), 32, 32, 2);
-                spriteAnimation.setPivot(16,16);
-                spriteAnimation.setScale(20, 20);
-                spriteAnimation.setPosition((int) (getWidth()/2), (int) (getHeight()/2));
-                currentStage.addChild(spriteAnimation);
+                Texture cloudTex = assetManager.loadTexture(R.drawable.clouds);
+                Sprite clouds = new Sprite(cloudTex, Color.WHITE);
+                clouds.setPivot((float) cloudTex.width/2, (float) cloudTex.height/2);
+                clouds.setPosition((float) (getWidth()/2), (float) (getHeight()/2));
+                clouds.setScale(scaleFactor[0], scaleFactor[0]);
+                currentStage.addChild(clouds);
 
-                TPSpriteAnimation spriteAnimation1 = new TPSpriteAnimation(tpAtlas, new Color(1f,1f,1f,1f), 32, 32, 1);
-                spriteAnimation1.setPivot(16,16);
-                spriteAnimation1.setScale(20, 20);
-                spriteAnimation1.setPosition(getWidth(), getHeight());
-                currentStage.addChild(spriteAnimation1);
+                Texture bg2Tex = assetManager.loadTexture(R.drawable.bg_layer2);
+                Sprite bg2 = new Sprite(bg2Tex, Color.WHITE);
+                bg2.setPivot((float) bg2Tex.width/2, (float) bg2Tex.height);
+                bg2.setPosition((float) (getWidth()/2), (float) getHeight()-(scaleFactor[0]*20));
+                bg2.setScale(scaleFactor[0], scaleFactor[0]);
+                currentStage.addChild(bg2);
 
-                Sprite s = new Sprite(assetManager.loadTexture(R.drawable.pngegg), new Color(1f,1f,1f,1f));
-                s.setPosition(r.nextInt(getWidth()-200), r.nextInt(getHeight()-200));
-                currentStage.addChild(s);
+                Texture bg1Tex = assetManager.loadTexture(R.drawable.bg_layer1);
+                Sprite bg1 = new Sprite(bg1Tex, Color.WHITE);
+                bg1.setPivot((float) bg1Tex.width/2, (float) bg1Tex.height);
+                bg1.setPosition((float) (getWidth()/2), (float) getHeight()-(scaleFactor[0]*14));
+                bg1.setScale(scaleFactor[0], scaleFactor[0]);
+                currentStage.addChild(bg1);
 
-                s = new Sprite(assetManager.loadTexture(R.drawable.pngegg), new Color(1f,1f,1f,1f));
-                s.setPosition(r.nextInt(getWidth()-200), r.nextInt(getHeight()-200));
-                currentStage.addChild(s);
+                Texture dirtTex = assetManager.loadTexture(R.drawable.dirt);
+                Sprite dirt = new Sprite(dirtTex, Color.WHITE);
+                dirt.setPivot((float) dirtTex.width/2, (float) dirtTex.height);
+                dirt.setPosition((float) (getWidth()/2), (float) (getHeight()));
+                dirt.setScale(scaleFactor[0], scaleFactor[0]);
+                currentStage.addChild(dirt);
+
+                Quad quad = new Quad(new Color(48,45,69,110), getWidth(), getHeight());
+                quad.setPivot((float) getWidth()/2, (float) getHeight()/2);
+                currentStage.addChild(quad);
+
+                TPAtlas ninjaMynaAtlas = assetManager.loadTexturePackerJsonAtlas(R.drawable.ninja_myna, R.raw.ninja_myna);
+                TPSpriteAnimation ninjaMyna = new TPSpriteAnimation(ninjaMynaAtlas, Color.WHITE, 32, 32, 12);
+                ninjaMyna.setPivot(16,16);
+                ninjaMyna.setScale(scaleFactor[0], scaleFactor[0]);
+                ninjaMyna.setPosition((float) (getWidth()/2)-(20*getWidth()/100f), (float) (getHeight()/2));
+                currentStage.addChild(ninjaMyna);
             }
         });
     }
