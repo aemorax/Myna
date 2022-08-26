@@ -1,6 +1,9 @@
 package com.nevergarden.myna.display;
 
+import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventDispatcher;
+import com.nevergarden.myna.events.EventListener;
+import com.nevergarden.myna.events.IEvent;
 import com.nevergarden.myna.interfaces.IDrawable;
 
 import org.joml.Matrix4f;
@@ -43,7 +46,15 @@ public class DisplayObject extends EventDispatcher implements IDrawable {
     }
 
     public void setParent(DisplayObjectContainer parent) {
+        if(this.parent != null)
+        this.parent.removeEventListeners(Event.TRANSFORM_CHANGE);
         this.parent = parent;
+        this.parent.addEventListener(Event.TRANSFORM_CHANGE, new EventListener() {
+            @Override
+            public void onEvent(IEvent event) {
+                recalculateMatrix();
+            }
+        });
     }
 
     public void draw(int frame) {
