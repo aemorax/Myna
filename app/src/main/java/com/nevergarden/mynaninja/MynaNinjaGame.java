@@ -116,7 +116,7 @@ public class MynaNinjaGame extends Myna {
 
         DisplayObject myna = currentStage.getChildAt(6);
         Vector3f mynaPos = myna.getPosition();
-        mynaPos.y += deltaTime;
+        mynaPos.y += 0.2f*deltaTime;
         if(mynaPos.y > (getHeight() - (scaleFactor[0]*(42)))) {
             mynaPos.y = (float) getHeight()/2;
         }

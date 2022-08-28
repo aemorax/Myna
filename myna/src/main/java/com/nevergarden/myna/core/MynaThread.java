@@ -15,7 +15,6 @@ public class MynaThread extends Thread {
             int FPS = (1000 / 60);
             if (loopRunTime < FPS) {
                 try {
-                    this.mina.requestRender();
                     Thread.sleep(FPS - loopRunTime);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -24,6 +23,7 @@ public class MynaThread extends Thread {
             long loopEnd = System.currentTimeMillis();
             loopRunTime = ((loopEnd - loopStart));
             this.mina.update(loopRunTime);
+            this.mina.requestRender();
         }
     }
 }
