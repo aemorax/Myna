@@ -2,8 +2,6 @@ package com.nevergarden.myna.display;
 
 import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventDispatcher;
-import com.nevergarden.myna.events.EventListener;
-import com.nevergarden.myna.events.IEvent;
 import com.nevergarden.myna.interfaces.IDrawable;
 
 import org.joml.Matrix4f;
@@ -38,6 +36,8 @@ public class DisplayObject extends EventDispatcher implements IDrawable {
         this.transform.rotate(this.rotation, this.transform);
         this.transform.scale(this.scale, this.transform);
         this.transform.translate(-this.pivot.x, -this.pivot.y, -this.pivot.z, this.transform);
+        if(this.parent != null)
+            this.parent.recalculateMatrix();
     }
 
     public void removeFromParent() {
@@ -49,12 +49,7 @@ public class DisplayObject extends EventDispatcher implements IDrawable {
         if(this.parent != null)
         this.parent.removeEventListeners(Event.TRANSFORM_CHANGE);
         this.parent = parent;
-        this.parent.addEventListener(Event.TRANSFORM_CHANGE, new EventListener() {
-            @Override
-            public void onEvent(IEvent event) {
-                recalculateMatrix();
-            }
-        });
+        this.recalculateMatrix();
     }
 
     public void draw(int frame) {

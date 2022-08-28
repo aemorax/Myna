@@ -67,7 +67,14 @@ public class Myna extends GLSurfaceView {
         return previousStage;
     }
 
-    public void update(long deltaTime) {}
+    public void update(long deltaTime) {
+        if(deltaTime == 0)
+            return;
+        if(currentStage.getRequiresRedraw()) {
+            currentStage.addAll();
+            currentStage.setRequiresRedraw(false);
+        }
+    }
 
     public void render() {
         Color c = this.currentStage.getColor();
@@ -76,7 +83,6 @@ public class Myna extends GLSurfaceView {
         this.eventDispatcher.dispatchEventWith(Event.ON_DRAW_FRAME);
         currentStage.drawAll();
         GLES10.glFinish();
-        currentStage.setRequiresRedraw(false);
     }
 
     public void setConfig(AttributeSet configData) {

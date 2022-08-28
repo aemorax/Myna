@@ -3,11 +3,13 @@ package com.nevergarden.myna.gfx;
 import android.opengl.GLES20;
 
 public class Texture {
+    public final int id;
     public final int handle;
     public final int width;
     public final int height;
 
-    public Texture(int handle, int width, int height) {
+    public Texture(int id, int handle, int width, int height) {
+        this.id = id;
         this.handle = handle;
         this.width = width;
         this.height = height;
