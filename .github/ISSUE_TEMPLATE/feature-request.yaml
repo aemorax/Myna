@@ -1,0 +1,30 @@
+name: ð Feature Request
+title: "[Feature]: "
+description: Report an anomaly or unexpected behavior from game engine.
+labels: ['enhancement']
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please help us adding new features to the game engine.
+        - [x] Keep that in mind a new feature might not be added if it doesn't fulfill game engine design philosophy.
+        - [x] A new feature might take time to be implemented.
+
+  - type: textarea
+    id: breif-info
+    validations:
+      required: true
+    attributes:
+      label: What should be added?
+      description: |
+        - A breif information about the feature?
+
+  - type: textarea
+    id: suggestion
+    validations:
+      required: false
+    attributes:
+      label: Suggestions on how to implement?
+      description: |
+        Is there any suggestion on how it should be implemented?
