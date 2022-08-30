@@ -120,6 +120,5 @@ public class TPSpriteAnimation extends Quad {
         this.atlas.texture.unbind();
         GLES20.glDisableVertexAttribArray(positionHandler);
         GLES20.glDisableVertexAttribArray(texCoordinationHandler);
-        program.unbind();
     }
 }

@@ -100,6 +100,5 @@ public class Sprite extends Quad {
         this.texture.unbind();
         GLES20.glDisableVertexAttribArray(positionHandler);
         GLES20.glDisableVertexAttribArray(texCoordinationHandler);
-        program.unbind();
     }
 }

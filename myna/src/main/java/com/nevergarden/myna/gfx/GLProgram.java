@@ -3,6 +3,7 @@ package com.nevergarden.myna.gfx;
 import android.opengl.GLES20;
 
 public class GLProgram {
+    private static int programInBind = 0;
     public final int nativeProgram;
     private boolean disposed= false;
 
@@ -13,15 +14,20 @@ public class GLProgram {
     public Boolean bind() {
         if(this.disposed)
             return false;
+        if(programInBind == this.nativeProgram)
+            return false;
         GLES20.glUseProgram(this.nativeProgram);
         return true;
     }
 
-    public void unbind() {
+    private void unbind() {
         GLES20.glUseProgram(0);
+        programInBind = 0;
     }
 
     public void dispose() {
+        if(programInBind == this.nativeProgram)
+            this.unbind();
         GLES20.glDeleteProgram(this.nativeProgram);
         this.disposed = true;
     }
