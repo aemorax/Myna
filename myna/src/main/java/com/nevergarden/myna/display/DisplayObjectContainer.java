@@ -1,6 +1,7 @@
 package com.nevergarden.myna.display;
 
 import com.nevergarden.myna.BuildConfig;
+import com.nevergarden.myna.events.Event;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,7 @@ public class DisplayObjectContainer extends DisplayObject {
         this.children.add(child);
         child.setParent(this);
         child.recalculateMatrix();
+        this.dispatchEventWith(Event.TRANSFORM_CHANGE);
         return child;
     }
 
@@ -42,6 +44,7 @@ public class DisplayObjectContainer extends DisplayObject {
         this.children.add(index, child);
         child.setParent(this);
         child.recalculateMatrix();
+        this.dispatchEventWith(Event.TRANSFORM_CHANGE);
         return child;
     }
 
@@ -70,11 +73,14 @@ public class DisplayObjectContainer extends DisplayObject {
     public DisplayObject removeChildAt(int index) {
         if(this.children.size() == 0)
             return null;
-        return this.children.remove(index);
+        DisplayObject child = this.children.remove(index);
+        this.dispatchEventWith(Event.TRANSFORM_CHANGE);
+        return child;
     }
 
     public void removeChildren() {
         this.children.clear();
+        this.dispatchEventWith(Event.TRANSFORM_CHANGE);
     }
 
     public void swapChildren(DisplayObject child1, DisplayObject child2) {
@@ -82,6 +88,7 @@ public class DisplayObjectContainer extends DisplayObject {
         int index2 = this.getChildIndex(child2);
         this.children.set(index1, child2);
         this.children.set(index2, child1);
+        this.dispatchEventWith(Event.TRANSFORM_CHANGE);
     }
 
     public void swapChildrenAt(int index1, int index2) {
@@ -89,6 +96,7 @@ public class DisplayObjectContainer extends DisplayObject {
         DisplayObject child2 = this.getChildAt(index2);
         this.children.set(index1, child2);
         this.children.set(index2, child1);
+        this.dispatchEventWith(Event.TRANSFORM_CHANGE);
     }
 
     public ArrayList<DisplayObject> getChildren() {

@@ -38,12 +38,20 @@ public class Stage extends DisplayObjectContainer {
             }
         });
         this.setView(new View());
+        this.addEventListener(Event.TRANSFORM_CHANGE, new EventListener() {
+            @Override
+            public void onEvent(IEvent event) {
+                setRequiresRedraw(true);
+            }
+        });
     }
 
     public void setRequiresRedraw(boolean requiresRedraw) {
         this.requiresRedraw = requiresRedraw;
-        if(requiresRedraw)
-            this.addAll();
+    }
+
+    public boolean getRequiresRedraw() {
+        return this.requiresRedraw;
     }
 
     public void resizeAll() {
@@ -66,21 +74,16 @@ public class Stage extends DisplayObjectContainer {
 
     @Override
     public DisplayObject addChild(DisplayObject child) {
-        DisplayObject o = super.addChild(child);
-        this.setRequiresRedraw(true);
-        return o;
+        return super.addChild(child);
     }
 
     @Override
     public DisplayObject removeChild(DisplayObject child) {
-        DisplayObject o = super.removeChild(child);
-        this.setRequiresRedraw(true);
-        return o;
+        return super.removeChild(child);
     }
 
     @Override
     public DisplayObject removeChildAt(int index) {
-        this.setRequiresRedraw(true);
         return super.removeChildAt(index);
     }
 
@@ -162,7 +165,6 @@ public class Stage extends DisplayObjectContainer {
     @Override
     protected void recalculateMatrix() {
         recalculateStageMatrix();
-        this.dispatchEventWith(Event.TRANSFORM_CHANGE);
     }
 
     private void recalculateStageMatrix() {

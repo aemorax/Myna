@@ -41,7 +41,7 @@ public class AssetManager {
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
 
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap, 0);
-        Texture t = new Texture(textureHandle[0], bitmap.getWidth(), bitmap.getHeight());
+        Texture t = new Texture(textureId, textureHandle[0], bitmap.getWidth(), bitmap.getHeight());
         bitmap.recycle();
 
         InputStream inputStream = myna.getResources().openRawResource(spriteSheetId);
@@ -71,7 +71,7 @@ public class AssetManager {
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
 
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap, 0);
-        Texture t = new Texture(textureHandle[0], bitmap.getWidth(), bitmap.getHeight());
+        Texture t = new Texture(resourceId, textureHandle[0], bitmap.getWidth(), bitmap.getHeight());
         bitmap.recycle();
         this.textures.put(resourceId, t);
 
