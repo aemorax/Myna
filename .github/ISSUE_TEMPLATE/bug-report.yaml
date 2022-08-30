@@ -19,7 +19,7 @@ body:
       description: |
         - A breif information about the bug
 
-  - type: input
+  - type: textarea
     id: reproduction
     validations:
       required: false
