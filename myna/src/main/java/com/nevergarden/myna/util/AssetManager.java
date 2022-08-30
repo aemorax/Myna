@@ -7,6 +7,7 @@ import android.opengl.GLUtils;
 
 import com.google.gson.Gson;
 import com.nevergarden.myna.core.Myna;
+import com.nevergarden.myna.ds.texturepacker.AsyncTPAtlas;
 import com.nevergarden.myna.ds.texturepacker.TPAtlas;
 import com.nevergarden.myna.ds.texturepacker.TPAtlasInfo;
 import com.nevergarden.myna.gfx.Texture;
@@ -24,19 +25,6 @@ public class AssetManager {
     private final Map<Integer, Texture> textures = new HashMap<>();
     public AssetManager(Myna myna) {
         this.myna = myna;
-    }
-
-    public Texture getTexture(int id) {
-        if(!textures.containsKey(id))
-            return null;
-        return this.textures.get(id);
-    }
-
-    public void putTexture(int id, Texture texture) {
-        if(this.textures.containsKey(id))
-            return;
-
-        this.textures.put(id, texture);
     }
 
     public TPAtlas loadTexturePackerJsonAtlas(int textureId, int spriteSheetId) {
@@ -65,6 +53,12 @@ public class AssetManager {
         return new TPAtlas(t, atlasInfo);
     }
 
+    public AsyncTPAtlas loadTexturePackerJsonAtlasAsync(int id, int atlasID) {
+        AsyncTPAtlas asyncTPAtlas = new AsyncTPAtlas(this, id, atlasID);
+        this.myna.queueEvent(asyncTPAtlas);
+        return asyncTPAtlas;
+    }
+
     public Texture loadTexture(int id) {
         if(textures.containsKey(id))
             return textures.get(id);
@@ -88,12 +82,12 @@ public class AssetManager {
         Texture t = new Texture(id, textureHandle[0], bitmap.getWidth(), bitmap.getHeight());
         bitmap.recycle();
 
-        this.putTexture(id, t);
+        this.textures.put(id, t);
         return t;
     }
 
     public AsyncTexture loadTextureAsync(int id) {
-        AsyncTexture texture = new AsyncTexture(this, id, this.myna.getResources());
+        AsyncTexture texture = new AsyncTexture(this, id);
         this.myna.queueEvent(texture);
         return texture;
     }
