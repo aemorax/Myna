@@ -7,6 +7,7 @@ import android.opengl.GLUtils;
 
 import com.google.gson.Gson;
 import com.nevergarden.myna.core.Myna;
+import com.nevergarden.myna.ds.texturepacker.AsyncTPAtlas;
 import com.nevergarden.myna.ds.texturepacker.TPAtlas;
 import com.nevergarden.myna.ds.texturepacker.TPAtlasInfo;
 import com.nevergarden.myna.gfx.Texture;
@@ -22,11 +23,15 @@ import java.util.Map;
 public class AssetManager {
     private final Myna myna;
     private final Map<Integer, Texture> textures = new HashMap<>();
+    private final Map<Integer, TPAtlas> tpAtlases = new HashMap<>();
     public AssetManager(Myna myna) {
         this.myna = myna;
     }
 
     public TPAtlas loadTexturePackerJsonAtlas(int textureId, int spriteSheetId) {
+        if(this.tpAtlases.containsKey(spriteSheetId))
+            return this.tpAtlases.get(spriteSheetId);
+
         int[] textureHandle = new int[1];
         GLES20.glGenTextures(1, textureHandle, 0);
         BitmapFactory.Options opt = new BitmapFactory.Options();
@@ -49,18 +54,29 @@ public class AssetManager {
         Reader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
         Gson gson = new Gson();
         TPAtlasInfo atlasInfo = gson.fromJson(reader, TPAtlasInfo.class);
-        return new TPAtlas(t, atlasInfo);
+
+        TPAtlas atlas = new TPAtlas(t, atlasInfo);
+        this.tpAtlases.put(spriteSheetId, atlas);
+
+        return atlas;
     }
 
-    public Texture loadTexture(int resourceId) {
-        if(textures.containsKey(resourceId))
-            return textures.get(resourceId);
+    public AsyncTPAtlas loadTexturePackerJsonAtlasAsync(int id, int atlasID) {
+        AsyncTPAtlas asyncTPAtlas = new AsyncTPAtlas(this, id, atlasID);
+        this.myna.queueEvent(asyncTPAtlas);
+        return asyncTPAtlas;
+    }
+
+    public Texture loadTexture(int id) {
+        if(textures.containsKey(id))
+            return textures.get(id);
+
         int[] textureHandle = new int[1];
         GLES20.glGenTextures(1, textureHandle, 0);
 
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inScaled = false;
-        Bitmap bitmap = BitmapFactory.decodeResource(myna.getResources(), resourceId, opt);
+        Bitmap bitmap = BitmapFactory.decodeResource(myna.getResources(), id, opt);
 
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
 
@@ -71,10 +87,16 @@ public class AssetManager {
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
 
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap, 0);
-        Texture t = new Texture(resourceId, textureHandle[0], bitmap.getWidth(), bitmap.getHeight());
+        Texture t = new Texture(id, textureHandle[0], bitmap.getWidth(), bitmap.getHeight());
         bitmap.recycle();
-        this.textures.put(resourceId, t);
 
+        this.textures.put(id, t);
         return t;
+    }
+
+    public AsyncTexture loadTextureAsync(int id) {
+        AsyncTexture texture = new AsyncTexture(this, id);
+        this.myna.queueEvent(texture);
+        return texture;
     }
 }

@@ -2,12 +2,11 @@ package com.nevergarden.mynaninja;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.nevergarden.myna.R;
 import com.nevergarden.myna.core.Myna;
 import com.nevergarden.myna.display.DisplayObject;
-import com.nevergarden.myna.display.View;
+import com.nevergarden.myna.ds.texturepacker.AsyncTPAtlas;
 import com.nevergarden.myna.ds.texturepacker.TPAtlas;
 import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventListener;
@@ -43,10 +42,19 @@ public class MynaNinjaGame extends Myna {
                     Touch to = t.get(0);
                     assert to != null;
                     if(to.getPhase() == TouchPhase.BEGAN) {
-                        DisplayObject myna = currentStage.getChildAt(6);
-                        Vector3f v = myna.getPosition();
-                        v.y -= 200f;
-                        myna.setPosition(v.x, v.y);
+                        AsyncTPAtlas asyncTPAtlas = assetManager.loadTexturePackerJsonAtlasAsync(R.drawable.ninja_myna, R.raw.ninja_myna);
+                        asyncTPAtlas.addEventListener(Event.LOAD, new EventListener() {
+                            @Override
+                            public void onEvent(IEvent event) {
+                                TPAtlas atlas = asyncTPAtlas.getTPAtlas();
+                                TPSpriteAnimation animation = new TPSpriteAnimation(atlas, Color.WHITE, 32, 32);
+                                animation.setPivot(16,16);
+                                animation.setScale(scaleFactor[0], scaleFactor[0]);
+                                animation.setPosition((float) r.nextInt(getWidth()), (float) r.nextInt(getHeight()));
+                                currentStage.addChild(animation);
+                            }
+                        });
+
                     }
                 }
             }
