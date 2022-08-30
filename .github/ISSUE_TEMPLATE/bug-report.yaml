@@ -1,0 +1,41 @@
+name: 🐞 Bug Report
+title: "[Bug]: "
+description: Report an anomaly or unexpected behavior from game engine.
+labels: ['bug']
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        - [x] Bug
+        Thanks for reporting this bug!
+
+  - type: textarea
+    id: breif-info
+    validations:
+      required: true
+    attributes:
+      label: What Happened?
+      description: |
+        - A breif information about the bug
+
+  - type: input
+    id: reproduction
+    validations:
+      required: false
+    attributes:
+      label: How to reproduce the bug?
+      description: |
+        Is there any clue on how to reproduce the bug? Which classes are suspects?
+      value: |
+        1.
+        2.
+        3.
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Copy paste of error logs or stack trace.
+    validations:
+      required: false
