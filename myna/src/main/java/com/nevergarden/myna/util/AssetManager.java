@@ -23,11 +23,15 @@ import java.util.Map;
 public class AssetManager {
     private final Myna myna;
     private final Map<Integer, Texture> textures = new HashMap<>();
+    private final Map<Integer, TPAtlas> tpAtlases = new HashMap<>();
     public AssetManager(Myna myna) {
         this.myna = myna;
     }
 
     public TPAtlas loadTexturePackerJsonAtlas(int textureId, int spriteSheetId) {
+        if(this.tpAtlases.containsKey(spriteSheetId))
+            return this.tpAtlases.get(spriteSheetId);
+
         int[] textureHandle = new int[1];
         GLES20.glGenTextures(1, textureHandle, 0);
         BitmapFactory.Options opt = new BitmapFactory.Options();
@@ -50,7 +54,11 @@ public class AssetManager {
         Reader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
         Gson gson = new Gson();
         TPAtlasInfo atlasInfo = gson.fromJson(reader, TPAtlasInfo.class);
-        return new TPAtlas(t, atlasInfo);
+
+        TPAtlas atlas = new TPAtlas(t, atlasInfo);
+        this.tpAtlases.put(spriteSheetId, atlas);
+
+        return atlas;
     }
 
     public AsyncTPAtlas loadTexturePackerJsonAtlasAsync(int id, int atlasID) {
