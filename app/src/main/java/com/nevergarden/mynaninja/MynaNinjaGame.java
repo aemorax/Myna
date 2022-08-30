@@ -95,7 +95,7 @@ public class MynaNinjaGame extends Myna {
                 currentStage.addChild(dirt2); // 4
 
                 Quad quad = new Quad(new Color(48,45,69,110), getWidth(), getHeight());
-                quad.setPivot((float) getWidth()/2, (float) getHeight()/2);
+                quad.setPivot((float) 0, (float) 0);
                 currentStage.addChild(quad); // 5
 
                 TPAtlas ninjaMynaAtlas = assetManager.loadTexturePackerJsonAtlas(R.drawable.ninja_myna, R.raw.ninja_myna);

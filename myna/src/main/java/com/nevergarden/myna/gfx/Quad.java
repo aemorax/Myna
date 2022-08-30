@@ -60,7 +60,7 @@ public class Quad extends DisplayObject implements IDrawable {
     @Override
     public void draw(int frame) {
         program.bind();
-        int positionHandler = GLES20.glGetAttribLocation(program.nativeProgram, "vPosition");
+        int positionHandler = GLES20.glGetAttribLocation(program.nativeProgram, "aPosition");
         int modelHandler = GLES20.glGetUniformLocation(program.nativeProgram, "uModel");
         int colorHandler = GLES20.glGetUniformLocation(program.nativeProgram, "uColor");
 
