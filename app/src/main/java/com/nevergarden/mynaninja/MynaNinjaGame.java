@@ -2,12 +2,10 @@ package com.nevergarden.mynaninja;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.nevergarden.myna.R;
 import com.nevergarden.myna.core.Myna;
 import com.nevergarden.myna.display.DisplayObject;
-import com.nevergarden.myna.display.View;
 import com.nevergarden.myna.ds.texturepacker.TPAtlas;
 import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventListener;
@@ -21,6 +19,7 @@ import com.nevergarden.myna.gfx.Sprite;
 import com.nevergarden.myna.gfx.TPSpriteAnimation;
 import com.nevergarden.myna.gfx.Texture;
 import com.nevergarden.myna.math.Vector3f;
+import com.nevergarden.myna.util.AsyncTexture;
 
 import java.util.Map;
 import java.util.Random;
@@ -43,10 +42,16 @@ public class MynaNinjaGame extends Myna {
                     Touch to = t.get(0);
                     assert to != null;
                     if(to.getPhase() == TouchPhase.BEGAN) {
-                        DisplayObject myna = currentStage.getChildAt(6);
-                        Vector3f v = myna.getPosition();
-                        v.y -= 200f;
-                        myna.setPosition(v.x, v.y);
+                        AsyncTexture texture = assetManager.loadTextureAsync(R.drawable.ninja_myna);
+                        texture.addEventListener(Event.LOAD, new EventListener() {
+                            @Override
+                            public void onEvent(IEvent event) {
+                                Sprite s = new Sprite(texture.getTexture(), Color.WHITE);
+                                s.setScale(scaleFactor[0], scaleFactor[0]);
+                                s.setPosition(getWidth()/2f, getHeight()/2f);
+                                currentStage.addChild(s);
+                            }
+                        });
                     }
                 }
             }

@@ -26,6 +26,19 @@ public class AssetManager {
         this.myna = myna;
     }
 
+    public Texture getTexture(int id) {
+        if(!textures.containsKey(id))
+            return null;
+        return this.textures.get(id);
+    }
+
+    public void putTexture(int id, Texture texture) {
+        if(this.textures.containsKey(id))
+            return;
+
+        this.textures.put(id, texture);
+    }
+
     public TPAtlas loadTexturePackerJsonAtlas(int textureId, int spriteSheetId) {
         int[] textureHandle = new int[1];
         GLES20.glGenTextures(1, textureHandle, 0);
@@ -52,15 +65,16 @@ public class AssetManager {
         return new TPAtlas(t, atlasInfo);
     }
 
-    public Texture loadTexture(int resourceId) {
-        if(textures.containsKey(resourceId))
-            return textures.get(resourceId);
+    public Texture loadTexture(int id) {
+        if(textures.containsKey(id))
+            return textures.get(id);
+
         int[] textureHandle = new int[1];
         GLES20.glGenTextures(1, textureHandle, 0);
 
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inScaled = false;
-        Bitmap bitmap = BitmapFactory.decodeResource(myna.getResources(), resourceId, opt);
+        Bitmap bitmap = BitmapFactory.decodeResource(myna.getResources(), id, opt);
 
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
 
@@ -71,10 +85,16 @@ public class AssetManager {
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
 
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap, 0);
-        Texture t = new Texture(resourceId, textureHandle[0], bitmap.getWidth(), bitmap.getHeight());
+        Texture t = new Texture(id, textureHandle[0], bitmap.getWidth(), bitmap.getHeight());
         bitmap.recycle();
-        this.textures.put(resourceId, t);
 
+        this.putTexture(id, t);
         return t;
+    }
+
+    public AsyncTexture loadTextureAsync(int id) {
+        AsyncTexture texture = new AsyncTexture(this, id, this.myna.getResources());
+        this.myna.queueEvent(texture);
+        return texture;
     }
 }
