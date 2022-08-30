@@ -75,6 +75,5 @@ public class Quad extends DisplayObject implements IDrawable {
 
         // Clean up
         GLES20.glDisableVertexAttribArray(positionHandler);
-        program.unbind();
     }
 }
