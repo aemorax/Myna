@@ -4,10 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.nevergarden.myna.R;
-import com.nevergarden.myna.gfx.Color;
-import com.nevergarden.myna.gfx.Sprite;
+import com.nevergarden.mynaninja.R;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {

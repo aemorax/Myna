@@ -1,7 +1,5 @@
 package com.nevergarden.myna.events;
 
-import androidx.annotation.NonNull;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,8 +39,8 @@ public class EventDispatcher {
         return Objects.requireNonNull(this.eventListeners.get(type)).contains(listener);
     }
 
-    public void invokeEvent(@NonNull IEvent event) {
-        if (!this.eventListeners.containsKey(event.getType())) {
+    public void invokeEvent(IEvent event) {
+        if (event != null && !this.eventListeners.containsKey(event.getType())) {
             return;
         }
 
@@ -66,7 +64,9 @@ public class EventDispatcher {
         }
     }
 
-    public void dispatchEvent(@NonNull IEvent event) {
+    public void dispatchEvent(IEvent event) {
+        if(event == null)
+            return;
         EventDispatcher previousTarget = event.getTarget();
         event.setTarget(this);
         invokeEvent(event);

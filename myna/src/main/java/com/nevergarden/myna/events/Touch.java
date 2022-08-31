@@ -2,8 +2,6 @@ package com.nevergarden.myna.events;
 
 import android.view.MotionEvent;
 
-import androidx.annotation.NonNull;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +24,6 @@ public class Touch {
         this.id = id;
     }
 
-    @NonNull
     @Override
     public String toString() {
         return "Touch{" +

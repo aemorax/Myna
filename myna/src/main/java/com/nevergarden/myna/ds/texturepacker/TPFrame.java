@@ -1,7 +1,5 @@
 package com.nevergarden.myna.ds.texturepacker;
 
-import androidx.annotation.NonNull;
-
 public class TPFrame {
     public String filename;
     public TPRectInfo frame;
@@ -10,7 +8,6 @@ public class TPFrame {
     public TPRectInfo spriteSourceSize;
     public TPSizeInfo sourceSize;
 
-    @NonNull
     @Override
     public String toString() {
         return "{" +

@@ -3,7 +3,7 @@ package com.nevergarden.mynaninja;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.nevergarden.myna.R;
+import com.nevergarden.mynaninja.R;
 import com.nevergarden.myna.core.Myna;
 import com.nevergarden.myna.display.DisplayObject;
 import com.nevergarden.myna.ds.texturepacker.AsyncTPAtlas;
