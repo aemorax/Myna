@@ -10,7 +10,7 @@ public class DisplayObjectContainer extends DisplayObject {
 
     public DisplayObjectContainer() {
         super();
-        if(!BuildConfig.DEBUG)
+        if (!BuildConfig.DEBUG)
             throw new AbstractMethodError();
 
         this.children = new ArrayList<>();
@@ -29,7 +29,7 @@ public class DisplayObjectContainer extends DisplayObject {
     }
 
     public DisplayObject addChild(DisplayObject child) {
-        if(this.children.contains(child))
+        if (this.children.contains(child))
             return null;
         this.children.add(child);
         child.setParent(this);
@@ -39,7 +39,7 @@ public class DisplayObjectContainer extends DisplayObject {
     }
 
     public DisplayObject addChildAt(int index, DisplayObject child) {
-        if(this.children.contains(child))
+        if (this.children.contains(child))
             return null;
         this.children.add(index, child);
         child.setParent(this);
@@ -65,13 +65,13 @@ public class DisplayObjectContainer extends DisplayObject {
     }
 
     public DisplayObject removeChild(DisplayObject child) {
-        if(this.children.remove(child))
+        if (this.children.remove(child))
             return child;
         return null;
     }
 
     public DisplayObject removeChildAt(int index) {
-        if(this.children.size() == 0)
+        if (this.children.size() == 0)
             return null;
         DisplayObject child = this.children.remove(index);
         this.dispatchEventWith(Event.TRANSFORM_CHANGE);

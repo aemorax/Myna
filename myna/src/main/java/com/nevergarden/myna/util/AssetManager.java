@@ -24,12 +24,13 @@ public class AssetManager {
     private final Myna myna;
     private final Map<Integer, Texture> textures = new HashMap<>();
     private final Map<Integer, TPAtlas> tpAtlases = new HashMap<>();
+
     public AssetManager(Myna myna) {
         this.myna = myna;
     }
 
     public TPAtlas loadTexturePackerJsonAtlas(int textureId, int spriteSheetId) {
-        if(this.tpAtlases.containsKey(spriteSheetId))
+        if (this.tpAtlases.containsKey(spriteSheetId))
             return this.tpAtlases.get(spriteSheetId);
 
         int[] textureHandle = new int[1];
@@ -68,7 +69,7 @@ public class AssetManager {
     }
 
     public Texture loadTexture(int id) {
-        if(textures.containsKey(id))
+        if (textures.containsKey(id))
             return textures.get(id);
 
         int[] textureHandle = new int[1];

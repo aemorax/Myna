@@ -10,14 +10,14 @@ public class AsyncTPAtlas extends EventDispatcher implements Runnable {
     final int atlasID;
     private TPAtlas tpAtlas;
 
-    public TPAtlas getTPAtlas() {
-        return tpAtlas;
-    }
-
     public AsyncTPAtlas(AssetManager assetManager, int id, int atlasID) {
         this.assetManager = assetManager;
         this.id = id;
         this.atlasID = atlasID;
+    }
+
+    public TPAtlas getTPAtlas() {
+        return tpAtlas;
     }
 
     @Override

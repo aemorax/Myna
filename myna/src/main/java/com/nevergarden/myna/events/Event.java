@@ -11,13 +11,13 @@ public class Event implements IEvent {
     public static final String LOAD = "load";
 
     protected final static ArrayList<IEvent> sEventPool = new ArrayList<>();
-    protected String type;
-    protected Boolean bubbles;
-    protected Object data;
     public EventDispatcher target;
     public EventDispatcher currentTarget;
     public Boolean stopsPropagation = false;
     public Boolean stopsImmediatePropagation = false;
+    protected String type;
+    protected Boolean bubbles;
+    protected Object data;
 
     protected Event(String type, Boolean bubbles, Object data) {
         this.type = type;
@@ -77,13 +77,13 @@ public class Event implements IEvent {
     }
 
     @Override
-    public EventDispatcher getCurrentTarget() {
-        return this.currentTarget;
+    public void setTarget(EventDispatcher target) {
+        this.target = target;
     }
 
     @Override
-    public void setTarget(EventDispatcher target) {
-        this.target = target;
+    public EventDispatcher getCurrentTarget() {
+        return this.currentTarget;
     }
 
     @Override

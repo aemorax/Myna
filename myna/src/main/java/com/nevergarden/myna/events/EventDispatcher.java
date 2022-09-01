@@ -8,7 +8,8 @@ import java.util.Objects;
 public class EventDispatcher {
     protected Map<String, ArrayList<EventListener>> eventListeners = new HashMap<>();
 
-    public EventDispatcher() {}
+    public EventDispatcher() {
+    }
 
     public void addEventListener(String type, EventListener listener) {
         ArrayList<EventListener> eventListeners = this.eventListeners.get(type);
@@ -24,7 +25,7 @@ public class EventDispatcher {
     public void removeEventListener(String type, EventListener listener) {
         if (this.eventListeners.containsKey(type)) {
             Objects.requireNonNull(this.eventListeners.get(type)).remove(listener);
-            if(Objects.requireNonNull(this.eventListeners.get(type)).isEmpty())
+            if (Objects.requireNonNull(this.eventListeners.get(type)).isEmpty())
                 this.eventListeners.remove(type);
         }
     }
@@ -65,7 +66,7 @@ public class EventDispatcher {
     }
 
     public void dispatchEvent(IEvent event) {
-        if(event == null)
+        if (event == null)
             return;
         EventDispatcher previousTarget = event.getTarget();
         event.setTarget(this);

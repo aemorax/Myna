@@ -1,7 +1,6 @@
 package com.nevergarden.myna.display;
 
 import android.opengl.GLES20;
-import android.util.Log;
 
 import com.nevergarden.myna.core.Myna;
 import com.nevergarden.myna.events.Event;
@@ -18,12 +17,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Stage extends DisplayObjectContainer {
     private final Myna myna;
+    private final Queue<IDrawable> drawables;
     private int width;
     private int height;
     private Color color;
     private boolean requiresRedraw = false;
-    private final Queue<IDrawable> drawables;
     private View view;
+
     public Stage(Myna myna, Color color) {
         super();
         this.myna = myna;
@@ -46,12 +46,12 @@ public class Stage extends DisplayObjectContainer {
         });
     }
 
-    public void setRequiresRedraw(boolean requiresRedraw) {
-        this.requiresRedraw = requiresRedraw;
-    }
-
     public boolean getRequiresRedraw() {
         return this.requiresRedraw;
+    }
+
+    public void setRequiresRedraw(boolean requiresRedraw) {
+        this.requiresRedraw = requiresRedraw;
     }
 
     public void resizeAll() {
@@ -59,13 +59,13 @@ public class Stage extends DisplayObjectContainer {
         DisplayObjectContainer current = this;
         stack.push(current);
 
-        while(!stack.isEmpty()) {
+        while (!stack.isEmpty()) {
             current = stack.pop();
             for (DisplayObject displayObject : current.getChildren()) {
                 displayObject.recalculateMatrix();
-                if(displayObject instanceof DisplayObjectContainer) {
+                if (displayObject instanceof DisplayObjectContainer) {
                     DisplayObjectContainer d = (DisplayObjectContainer) displayObject;
-                    if(d.getChildrenCount() > 0)
+                    if (d.getChildrenCount() > 0)
                         stack.push(d);
                 }
             }
@@ -104,12 +104,12 @@ public class Stage extends DisplayObjectContainer {
                             stack.push(d);
                     }
                 }
-            }
-            catch (ConcurrentModificationException e) {
+            } catch (ConcurrentModificationException e) {
                 e.printStackTrace();
             }
         }
     }
+
     public void drawAll() {
         GLES20.glCullFace(GLES20.GL_FRONT);
         GLES20.glFrontFace(GLES20.GL_CCW);
@@ -117,7 +117,7 @@ public class Stage extends DisplayObjectContainer {
 
         GLES20.glEnable(GLES20.GL_CULL_FACE);
         GLES20.glEnable(GLES20.GL_BLEND);
-        for (IDrawable drawable: drawables) {
+        for (IDrawable drawable : drawables) {
             drawable.draw(this.myna.renderer.getCounter());
         }
         GLES20.glDisable(GLES20.GL_CULL_FACE);
@@ -127,6 +127,7 @@ public class Stage extends DisplayObjectContainer {
     public Color getColor() {
         return this.color;
     }
+
     public void setColor(Color color) {
         this.color = color;
     }
@@ -135,10 +136,12 @@ public class Stage extends DisplayObjectContainer {
         this.width = newWidth;
         recalculateMatrix();
     }
+
     public void setHeight(int newHeight) {
         this.height = newHeight;
         recalculateMatrix();
     }
+
     public void setSize(int newWidth, int newHeight) {
         this.width = newWidth;
         this.height = newHeight;
@@ -150,7 +153,7 @@ public class Stage extends DisplayObjectContainer {
     }
 
     public void setView(View view) {
-        if(this.view != null)
+        if (this.view != null)
             this.view.removeEventListeners(Event.TRANSFORM_CHANGE);
         view.addEventListener(Event.TRANSFORM_CHANGE, new EventListener() {
             @Override

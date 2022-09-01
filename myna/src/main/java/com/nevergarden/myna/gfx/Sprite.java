@@ -7,11 +7,10 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 public class Sprite extends Quad {
+    private static GLProgram program;
     private final FloatBuffer vertexBuffer;
     private final FloatBuffer textureCoordinationBuffer;
     private final Color spriteColor;
-
-    private static GLProgram program;
     private final Texture texture;
 
     public Sprite(Texture texture, Color color) {
@@ -29,17 +28,17 @@ public class Sprite extends Quad {
                 texture.width, 0, 0
         };
         // Texture Coordinates for single sprite face
-        float[] textureCoordination = new float[] {
-                1,1,
-                0,1,
-                0,0,
-                1,1,
-                0,0,
-                1,0
+        float[] textureCoordination = new float[]{
+                1, 1,
+                0, 1,
+                0, 0,
+                1, 1,
+                0, 0,
+                1, 0
         };
 
         // Create shader program for sprite if it doesn't exist
-        if(program == null) {
+        if (program == null) {
             String vertexShader = "uniform mat4 uModel;" + "uniform vec4 uColor;" +
                     "attribute vec3 aPosition;" + "attribute vec2 aTexCoordination;" +
                     "varying vec2 vTexCoordination;" + "varying vec4 vColor;" +
@@ -56,12 +55,12 @@ public class Sprite extends Quad {
         }
 
         // Allocate byte buffers
-        ByteBuffer bb = ByteBuffer.allocateDirect(spriteVertex.length*4);
+        ByteBuffer bb = ByteBuffer.allocateDirect(spriteVertex.length * 4);
         bb.order(ByteOrder.nativeOrder());
         this.vertexBuffer = bb.asFloatBuffer();
         this.vertexBuffer.put(spriteVertex);
         this.vertexBuffer.position(0);
-        bb = ByteBuffer.allocateDirect(textureCoordination.length*4);
+        bb = ByteBuffer.allocateDirect(textureCoordination.length * 4);
         bb.order(ByteOrder.nativeOrder());
         this.textureCoordinationBuffer = bb.asFloatBuffer();
         this.textureCoordinationBuffer.put(textureCoordination);

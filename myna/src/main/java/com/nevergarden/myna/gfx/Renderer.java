@@ -5,7 +5,6 @@ import android.opengl.GLSurfaceView;
 
 import com.nevergarden.myna.core.Myna;
 import com.nevergarden.myna.core.MynaThread;
-import com.nevergarden.myna.display.Stage;
 import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.ResizeEventData;
 
@@ -28,17 +27,18 @@ public class Renderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
-        Stage newStage = new Stage(this.myna, new Color(0.0f,0.0f,0.0f,1.0f));
-        this.myna.setCurrentStage(newStage, false);
+        this.myna.loadAssets();
+        this.myna.init();
         this.myna.eventDispatcher.dispatchEventWith(Event.CONTEXT_CREATE);
         this.mynaThread.start();
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
-        GLES10.glViewport(0,0, width, height);
+        GLES10.glViewport(0, 0, width, height);
         this.width = width;
         this.height = height;
+        this.myna.onResize(width, height);
         this.myna.eventDispatcher.dispatchEventWith(Event.RESIZE, false, new ResizeEventData(width, height));
     }
 

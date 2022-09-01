@@ -12,13 +12,10 @@ import java.nio.FloatBuffer;
 public class Quad extends DisplayObject implements IDrawable {
 
     private static GLProgram program = null;
-
-    private final FloatBuffer vertexBuffer;
     protected final Color color;
-
     protected final float width;
     protected final float height;
-
+    private final FloatBuffer vertexBuffer;
     public float[] modelMatrix;
 
     public Quad(Color color, float width, float height) {
@@ -36,14 +33,14 @@ public class Quad extends DisplayObject implements IDrawable {
                 width, 0, 0
         };
 
-        if(program == null) {
+        if (program == null) {
             String vertexShader = "attribute vec3 aPosition;" +
                     "uniform mat4 uModel;" +
                     "void main() { gl_Position = uModel * vec4(aPosition,1.0); }";
             String fragmentShader = "precision mediump float; uniform vec4 uColor; void main() { gl_FragColor = uColor; }";
             program = GLProgram.createProgramFromSource(vertexShader, fragmentShader);
         }
-        ByteBuffer bb = ByteBuffer.allocateDirect(quadVertices.length*4);
+        ByteBuffer bb = ByteBuffer.allocateDirect(quadVertices.length * 4);
         bb.order(ByteOrder.nativeOrder());
         vertexBuffer = bb.asFloatBuffer();
         vertexBuffer.put(quadVertices);

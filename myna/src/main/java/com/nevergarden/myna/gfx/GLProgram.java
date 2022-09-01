@@ -5,31 +5,10 @@ import android.opengl.GLES20;
 public class GLProgram {
     private static int programInBind = 0;
     public final int nativeProgram;
-    private boolean disposed= false;
+    private boolean disposed = false;
 
     public GLProgram(int program) {
         this.nativeProgram = program;
-    }
-
-    public Boolean bind() {
-        if(this.disposed)
-            return false;
-        if(programInBind == this.nativeProgram)
-            return false;
-        GLES20.glUseProgram(this.nativeProgram);
-        return true;
-    }
-
-    private void unbind() {
-        GLES20.glUseProgram(0);
-        programInBind = 0;
-    }
-
-    public void dispose() {
-        if(programInBind == this.nativeProgram)
-            this.unbind();
-        GLES20.glDeleteProgram(this.nativeProgram);
-        this.disposed = true;
     }
 
     public static GLProgram createProgramFromSource(String vertex, String fragment) {
@@ -51,5 +30,26 @@ public class GLProgram {
         GLES20.glDeleteShader(fragmentShader);
 
         return new GLProgram(program);
+    }
+
+    public Boolean bind() {
+        if (this.disposed)
+            return false;
+        if (programInBind == this.nativeProgram)
+            return false;
+        GLES20.glUseProgram(this.nativeProgram);
+        return true;
+    }
+
+    private void unbind() {
+        GLES20.glUseProgram(0);
+        programInBind = 0;
+    }
+
+    public void dispose() {
+        if (programInBind == this.nativeProgram)
+            this.unbind();
+        GLES20.glDeleteProgram(this.nativeProgram);
+        this.disposed = true;
     }
 }

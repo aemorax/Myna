@@ -10,18 +10,18 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 public class TPSpriteAnimation extends Quad {
-    public final int frameCount;
-    public int currentFrame = 0;
-    private int frameRate = 24;
     private static GLProgram program = null;
-
+    public final int frameCount;
     private final FloatBuffer vertexBuffer;
     private final FloatBuffer textureCoordinationBuffer;
-
     private final TPAtlas atlas;
+    public int currentFrame = 0;
+    private int frameRate = 24;
+
     public TPSpriteAnimation(TPAtlas atlas, Color color, int width, int height) {
         this(atlas, color, width, height, 24);
     }
+
     public TPSpriteAnimation(TPAtlas atlas, Color color, int width, int height, int frameRate) {
         super(color, width, height);
         this.atlas = atlas;
@@ -29,7 +29,7 @@ public class TPSpriteAnimation extends Quad {
         this.frameRate = frameRate;
 
         // TR->TL->BL->BR->TR
-        float[] vertexPoints = new float[] {
+        float[] vertexPoints = new float[]{
                 width, height, 0,
                 0, height, 0,
                 0, 0, 0,
@@ -41,23 +41,23 @@ public class TPSpriteAnimation extends Quad {
         float[] texCoordinationPoints = new float[texCoordinationCount];
         for (int i = 0; i < atlas.atlasInfo.frames.length; i++) {
             TPFrame frame = atlas.atlasInfo.frames[i];
-            float xmin = frame.frame.x/(float)atlas.atlasInfo.meta.size.w;
-            float xmax = (frame.frame.x + frame.frame.w)/(float)atlas.atlasInfo.meta.size.w;
-            float ymin = frame.frame.y/(float)atlas.atlasInfo.meta.size.h;
-            float ymax = (frame.frame.y + frame.frame.h)/(float)atlas.atlasInfo.meta.size.h;
-            texCoordinationPoints[10*i] = xmax;
-            texCoordinationPoints[10*i+1] = ymax;
-            texCoordinationPoints[10*i+2] = xmin;
-            texCoordinationPoints[10*i+3] = ymax;
-            texCoordinationPoints[10*i+4] = xmin;
-            texCoordinationPoints[10*i+5] = ymin;
-            texCoordinationPoints[10*i+6] = xmax;
-            texCoordinationPoints[10*i+7] = ymin;
-            texCoordinationPoints[10*i+8] = xmax;
-            texCoordinationPoints[10*i+9] = ymax;
+            float xmin = frame.frame.x / (float) atlas.atlasInfo.meta.size.w;
+            float xmax = (frame.frame.x + frame.frame.w) / (float) atlas.atlasInfo.meta.size.w;
+            float ymin = frame.frame.y / (float) atlas.atlasInfo.meta.size.h;
+            float ymax = (frame.frame.y + frame.frame.h) / (float) atlas.atlasInfo.meta.size.h;
+            texCoordinationPoints[10 * i] = xmax;
+            texCoordinationPoints[10 * i + 1] = ymax;
+            texCoordinationPoints[10 * i + 2] = xmin;
+            texCoordinationPoints[10 * i + 3] = ymax;
+            texCoordinationPoints[10 * i + 4] = xmin;
+            texCoordinationPoints[10 * i + 5] = ymin;
+            texCoordinationPoints[10 * i + 6] = xmax;
+            texCoordinationPoints[10 * i + 7] = ymin;
+            texCoordinationPoints[10 * i + 8] = xmax;
+            texCoordinationPoints[10 * i + 9] = ymax;
         }
 
-        if(program == null) {
+        if (program == null) {
             String vertexShader = "uniform mat4 uModel;" + "uniform vec4 uColor;" +
                     "attribute vec3 aPosition;" + "attribute vec2 aTexCoordination;" +
                     "varying vec2 vTexCoordination;" + "varying vec4 vColor;" +
@@ -72,12 +72,12 @@ public class TPSpriteAnimation extends Quad {
                     "void main() { gl_FragColor = texture2D(uTex, vTexCoordination) * vColor; }";
             program = GLProgram.createProgramFromSource(vertexShader, fragmentShader);
         }
-        ByteBuffer bb = ByteBuffer.allocateDirect(vertexPoints.length*4);
+        ByteBuffer bb = ByteBuffer.allocateDirect(vertexPoints.length * 4);
         bb.order(ByteOrder.nativeOrder());
         this.vertexBuffer = bb.asFloatBuffer();
         this.vertexBuffer.put(vertexPoints);
         this.vertexBuffer.position(0);
-        bb = ByteBuffer.allocateDirect(texCoordinationPoints.length*4);
+        bb = ByteBuffer.allocateDirect(texCoordinationPoints.length * 4);
         bb.order(ByteOrder.nativeOrder());
         this.textureCoordinationBuffer = bb.asFloatBuffer();
         this.textureCoordinationBuffer.put(texCoordinationPoints);
@@ -100,8 +100,8 @@ public class TPSpriteAnimation extends Quad {
 
         // Set vertex and texture buffers
         GLES20.glVertexAttribPointer(positionHandler, 3, GLES20.GL_FLOAT, false, 0, vertexBuffer);
-        textureCoordinationBuffer.position((currentFrame%frameCount)*10);
-        if(frame % frameRate == 0)
+        textureCoordinationBuffer.position((currentFrame % frameCount) * 10);
+        if (frame % frameRate == 0)
             currentFrame++;
         GLES20.glVertexAttribPointer(texCoordinationHandler, 2, GLES20.GL_FLOAT, false, 0, textureCoordinationBuffer);
 

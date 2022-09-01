@@ -1,13 +1,15 @@
 package com.nevergarden.myna;
 
-import org.junit.Assert;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventDispatcher;
 import com.nevergarden.myna.events.EventListener;
 import com.nevergarden.myna.events.IEvent;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.Map;
 
 public class EventDispatcherUnitTest {
     public static boolean shouldPass;
+
     @Test
     public void test_eventAddingAndDispatching() {
         EventDispatcher eventDispatcher = new EventDispatcher();
@@ -29,12 +32,12 @@ public class EventDispatcherUnitTest {
         });
 
         eventDispatcher.dispatchEvent(Event.fromPool("create"));
-        if(!shouldPass)
+        if (!shouldPass)
             Assert.fail("EventDispatcher.dispatchEvent is not working.");
 
         shouldPass = false;
         eventDispatcher.dispatchEventWith("create");
-        if(!shouldPass)
+        if (!shouldPass)
             Assert.fail("EventDispatcher.dispatchEventWith is not working.");
     }
 
@@ -43,11 +46,13 @@ public class EventDispatcherUnitTest {
         EventDispatcher eventDispatcher = new EventDispatcher();
         EventListener someEventListener = new EventListener() {
             @Override
-            public void onEvent(IEvent event) {}
+            public void onEvent(IEvent event) {
+            }
         };
         EventListener notAddedEventListener = new EventListener() {
             @Override
-            public void onEvent(IEvent event) {}
+            public void onEvent(IEvent event) {
+            }
         };
         eventDispatcher.addEventListener("create", someEventListener);
         Assert.assertEquals(eventDispatcher.hasEventListener("create", someEventListener), true);
@@ -60,20 +65,23 @@ public class EventDispatcherUnitTest {
         EventDispatcher eventDispatcher = new EventDispatcher();
         EventListener knownListener = new EventListener() {
             @Override
-            public void onEvent(IEvent event) {}
+            public void onEvent(IEvent event) {
+            }
         };
 
         eventDispatcher.addEventListener("create", knownListener);
         eventDispatcher.addEventListener("remove", knownListener);
         eventDispatcher.addEventListener("remove", new EventListener() {
             @Override
-            public void onEvent(IEvent event) {}
+            public void onEvent(IEvent event) {
+            }
         });
 
         eventDispatcher.addEventListener("hasTwo", knownListener);
         eventDispatcher.addEventListener("hasTwo", new EventListener() {
             @Override
-            public void onEvent(IEvent event) {}
+            public void onEvent(IEvent event) {
+            }
         });
 
         Class<? extends EventDispatcher> eventDispatcherC = eventDispatcher.getClass();

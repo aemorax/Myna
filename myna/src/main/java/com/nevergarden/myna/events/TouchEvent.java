@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class TouchEvent extends Event implements IEvent {
     private static final ArrayList<IEvent> sEventPool = new ArrayList<>();
+
     private TouchEvent(String type) {
         this(type, null);
     }
@@ -19,10 +20,10 @@ public class TouchEvent extends Event implements IEvent {
 
 
     public static IEvent fromPool(Map<Integer, Touch> touches, Boolean bubbles) {
-        if(!TouchEvent.sEventPool.isEmpty()) {
+        if (!TouchEvent.sEventPool.isEmpty()) {
             return TouchEvent.sEventPool.remove(0).reset(Event.TOUCH, bubbles, touches);
         }
-        return new TouchEvent("touch",touches, bubbles);
+        return new TouchEvent("touch", touches, bubbles);
     }
 
     public Map<Integer, Touch> getData() {

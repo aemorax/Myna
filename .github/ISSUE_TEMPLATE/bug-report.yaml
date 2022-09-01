@@ -1,7 +1,7 @@
 name: 🐞 Bug Report
 title: "[Bug]: "
 description: Report an anomaly or unexpected behavior from game engine.
-labels: ['bug']
+labels: [ 'bug' ]
 
 body:
   - type: markdown
