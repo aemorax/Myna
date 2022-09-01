@@ -1,6 +1,5 @@
 package com.nevergarden.myna.display;
 
-import com.nevergarden.myna.BuildConfig;
 import com.nevergarden.myna.events.Event;
 
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ public class DisplayObjectContainer extends DisplayObject {
 
     public DisplayObjectContainer() {
         super();
-        if (!BuildConfig.DEBUG)
+        if (!com.nevergarden.myna.BuildConfig.DEBUG)
             throw new AbstractMethodError();
 
         this.children = new ArrayList<>();

@@ -11,7 +11,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
-import com.nevergarden.myna.R;
 import com.nevergarden.myna.display.Stage;
 import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventDispatcher;
@@ -189,7 +188,9 @@ public class Myna extends GLSurfaceView {
     }
 
     private void setConfig(AttributeSet configData) {
-        TypedArray typedArray = getContext().obtainStyledAttributes(configData, new int[]{R.attr.myna_pixelFormat, R.attr.myna_renderMode});
+        TypedArray typedArray = getContext().obtainStyledAttributes(configData, new int[]{
+                com.nevergarden.myna.R.attr.myna_pixelFormat,
+                com.nevergarden.myna.R.attr.myna_renderMode});
         int id = typedArray.getInteger(0, 0);
         MynaPixelFormat pixelFormat = MynaPixelFormat.fromId(id);
         this.config.setPixelFormat(pixelFormat);
