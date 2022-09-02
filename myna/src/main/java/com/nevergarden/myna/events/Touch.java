@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A Touch property.
+ */
 public class Touch {
     private final static ArrayList<Touch> sEventPool = new ArrayList<>();
     private final static Map<Integer, Touch> touches = new HashMap<>();
@@ -24,35 +27,22 @@ public class Touch {
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "Touch{" +
-                "id=" + id +
-                ", index=" + index +
-                ", x=" + x +
-                ", y=" + y +
-                ", dX=" + lastX +
-                ", dY=" + lastY +
-                ", phase=" + phase +
-                ", pressure=" + pressure +
-                ", downTime=" + downTime +
-                '}';
-    }
-
+    /**
+     * Generates a touch map from native android MotionEvent.
+     */
     public static Map<Integer, Touch> byNativeEvent(MotionEvent event) {
         int index = event.getActionIndex();
         int pointer = event.getPointerId(index);
 
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_POINTER_DOWN:
-            {
+            case MotionEvent.ACTION_POINTER_DOWN: {
                 Touch t;
-                if(touches.containsKey(pointer))
+                if (touches.containsKey(pointer))
                     t = touches.get(pointer);
                 else
                     t = Touch.fromPool(pointer);
-                if(t != null) {
+                if (t != null) {
                     t.index = index;
                     t.lastX = 0;
                     t.lastY = 0;
@@ -66,14 +56,13 @@ public class Touch {
                 }
                 break;
             }
-            case MotionEvent.ACTION_MOVE:
-            {
+            case MotionEvent.ACTION_MOVE: {
                 for (int i = 0; i < event.getPointerCount(); i++) {
                     Touch t = null;
                     pointer = event.getPointerId(i);
-                    if(touches.containsKey(pointer))
+                    if (touches.containsKey(pointer))
                         t = touches.get(pointer);
-                    if(t != null) {
+                    if (t != null) {
                         t.index = i;
                         t.lastX = t.x;
                         t.lastY = t.y;
@@ -89,10 +78,9 @@ public class Touch {
             }
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
-            case MotionEvent.ACTION_CANCEL:
-            {
+            case MotionEvent.ACTION_CANCEL: {
                 Touch t = touches.get(pointer);
-                if(t != null) {
+                if (t != null) {
                     t.lastX = t.x;
                     t.lastY = t.y;
                     t.x = event.getX();
@@ -110,13 +98,28 @@ public class Touch {
     }
 
     public static Touch fromPool(int id) {
-        if(sEventPool.isEmpty())
+        if (sEventPool.isEmpty())
             return new Touch(id);
         return sEventPool.remove(0).reset(id);
     }
 
     public static void toPool(Touch touch) {
         sEventPool.add(touch);
+    }
+
+    @Override
+    public String toString() {
+        return "Touch{" +
+                "id=" + id +
+                ", index=" + index +
+                ", x=" + x +
+                ", y=" + y +
+                ", dX=" + lastX +
+                ", dY=" + lastY +
+                ", phase=" + phase +
+                ", pressure=" + pressure +
+                ", downTime=" + downTime +
+                '}';
     }
 
     public void dispose() {

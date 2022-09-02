@@ -8,6 +8,7 @@ android {
     defaultConfig {
         minSdk 8
         targetSdk 32
+        versionName "1.0.0"
 
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -28,4 +29,52 @@ dependencies {
     implementation 'org.joml:joml:1.10.4'
     implementation 'com.google.code.gson:gson:2.9.1'
     testImplementation 'junit:junit:4.13.2'
+}
+
+task javadoc() {
+    group "reporting"
+    description "Generates Javadoc."
+}
+
+android.libraryVariants.all { variant ->
+    def task = project.tasks.create("generate${variant.name.capitalize()}Javadoc", Javadoc) {
+        title "Myna API (${project.android.defaultConfig.versionName})"
+        group "ApiDoc"
+        description "Generates Javadoc for $variant.name."
+
+        source = variant.sourceSets.collect { it.java.sourceFiles }.inject { m, i -> m + i }
+
+        doFirst {
+            classpath = project.files(variant.javaCompileProvider.get().classpath.files,
+                    project.android.getBootClasspath())
+        }
+
+        options.addStringOption('Xdoclint:none', '-quiet')
+
+        exclude "**/R"
+        exclude "**/R.**"
+        exclude "**/R\$**"
+        exclude "**/BuildConfig*"
+
+        /*
+        options.windowTitle = "Myna"
+        options.memberLevel = JavadocMemberLevel.PROTECTED
+        options.linkSource false
+        options.author = false
+        options.links("http://d.android.com/reference")
+        */
+        options {
+            windowTitle = "Myna"
+            memberLevel = JavadocMemberLevel.PROTECTED
+            linkSource false
+            author false
+            links("http://d.android.com/reference")
+            setStylesheetFile(file("javadoc-styles.css"))
+        }
+
+        failOnError true
+    }
+
+    task.dependsOn "assemble${variant.name.capitalize()}"
+    javadoc.dependsOn task
 }
