@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A Touch property.
+ */
 public class Touch {
     private final static ArrayList<Touch> sEventPool = new ArrayList<>();
     private final static Map<Integer, Touch> touches = new HashMap<>();
@@ -24,6 +27,9 @@ public class Touch {
         this.id = id;
     }
 
+    /**
+     * Generates a touch map from native android MotionEvent.
+     */
     public static Map<Integer, Touch> byNativeEvent(MotionEvent event) {
         int index = event.getActionIndex();
         int pointer = event.getPointerId(index);

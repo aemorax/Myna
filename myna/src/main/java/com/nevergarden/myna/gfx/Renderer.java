@@ -4,16 +4,17 @@ import android.opengl.GLES10;
 import android.opengl.GLSurfaceView;
 
 import com.nevergarden.myna.core.Myna;
-import com.nevergarden.myna.core.MynaThread;
 import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.ResizeEventData;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+/**
+ * Default Myna Renderer.
+ */
 public class Renderer implements GLSurfaceView.Renderer {
     private final Myna myna;
-    private final MynaThread mynaThread;
 
     private int width = 0;
     private int height = 0;
@@ -22,7 +23,6 @@ public class Renderer implements GLSurfaceView.Renderer {
 
     public Renderer(Myna myna) {
         this.myna = myna;
-        this.mynaThread = new MynaThread(myna);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Renderer implements GLSurfaceView.Renderer {
         this.myna.loadAssets();
         this.myna.init();
         this.myna.eventDispatcher.dispatchEventWith(Event.CONTEXT_CREATE);
-        this.mynaThread.start();
+        this.myna.thread.start();
     }
 
     @Override

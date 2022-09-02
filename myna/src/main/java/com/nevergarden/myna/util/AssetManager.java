@@ -20,6 +20,9 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * AssetManager
+ */
 public class AssetManager {
     private final Myna myna;
     private final Map<Integer, Texture> textures = new HashMap<>();
@@ -29,6 +32,9 @@ public class AssetManager {
         this.myna = myna;
     }
 
+    /**
+     * Loads a new texture packer atlas.
+     */
     public TPAtlas loadTexturePackerJsonAtlas(int textureId, int spriteSheetId) {
         if (this.tpAtlases.containsKey(spriteSheetId))
             return this.tpAtlases.get(spriteSheetId);
@@ -62,12 +68,18 @@ public class AssetManager {
         return atlas;
     }
 
+    /**
+     * Loads up a new async texture packer atlas.
+     */
     public AsyncTPAtlas loadTexturePackerJsonAtlasAsync(int id, int atlasID) {
         AsyncTPAtlas asyncTPAtlas = new AsyncTPAtlas(this, id, atlasID);
         this.myna.queueEvent(asyncTPAtlas);
         return asyncTPAtlas;
     }
 
+    /**
+     * Loads up a texture.
+     */
     public Texture loadTexture(int id) {
         if (textures.containsKey(id))
             return textures.get(id);
@@ -95,6 +107,9 @@ public class AssetManager {
         return t;
     }
 
+    /**
+     * Loads an async texture.
+     */
     public AsyncTexture loadTextureAsync(int id) {
         AsyncTexture texture = new AsyncTexture(this, id);
         this.myna.queueEvent(texture);

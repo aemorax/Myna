@@ -1,14 +1,19 @@
-package com.nevergarden.myna.gfx;
+package com.nevergarden.myna.display;
 
 import android.opengl.GLES20;
 
 import com.nevergarden.myna.ds.texturepacker.TPAtlas;
 import com.nevergarden.myna.ds.texturepacker.TPFrame;
+import com.nevergarden.myna.ds.Color;
+import com.nevergarden.myna.gfx.GLProgram;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+/**
+ * TexturePacker Sprite Animation Item.
+ */
 public class TPSpriteAnimation extends Quad {
     private static GLProgram program = null;
     public final int frameCount;
@@ -18,10 +23,16 @@ public class TPSpriteAnimation extends Quad {
     public int currentFrame = 0;
     private int frameRate = 24;
 
+    /**
+     * Constructor with 24 frame per second
+     */
     public TPSpriteAnimation(TPAtlas atlas, Color color, int width, int height) {
         this(atlas, color, width, height, 24);
     }
 
+    /**
+     * Default Constructor.
+     */
     public TPSpriteAnimation(TPAtlas atlas, Color color, int width, int height, int frameRate) {
         super(color, width, height);
         this.atlas = atlas;

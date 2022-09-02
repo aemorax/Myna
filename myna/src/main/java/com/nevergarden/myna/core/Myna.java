@@ -16,7 +16,7 @@ import com.nevergarden.myna.events.Event;
 import com.nevergarden.myna.events.EventDispatcher;
 import com.nevergarden.myna.events.Touch;
 import com.nevergarden.myna.events.TouchEvent;
-import com.nevergarden.myna.gfx.Color;
+import com.nevergarden.myna.ds.Color;
 import com.nevergarden.myna.util.AssetManager;
 
 import java.util.Map;
@@ -49,6 +49,8 @@ public class Myna extends GLSurfaceView {
      */
     public final com.nevergarden.myna.gfx.Renderer renderer;
 
+    public final MynaThread thread;
+
     private final MynaConfig config;
 
     /**
@@ -76,6 +78,7 @@ public class Myna extends GLSurfaceView {
         this.setConfig(attrs);
 
         // Initialize renderer.
+        this.thread = new MynaThread(this);
         this.renderer = new com.nevergarden.myna.gfx.Renderer(this);
         this.setRenderer(this.renderer);
         this.setRenderMode(this.config.getRenderMode());
@@ -177,7 +180,7 @@ public class Myna extends GLSurfaceView {
         Color c = this.currentStage.getColor();
         GLES10.glClearColor(c.getFRed(), c.getFGreen(), c.getFBlue(), c.getFAlpha());
         GLES10.glClear(GLES10.GL_COLOR_BUFFER_BIT);
-        this.eventDispatcher.dispatchEventWith(Event.ON_DRAW_FRAME);
+        this.eventDispatcher.dispatchEventWith(Event.RENDER);
         currentStage.drawAll();
         GLES10.glFinish();
     }

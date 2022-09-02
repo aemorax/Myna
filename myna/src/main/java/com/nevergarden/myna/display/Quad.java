@@ -1,23 +1,31 @@
-package com.nevergarden.myna.gfx;
+package com.nevergarden.myna.display;
 
 import android.opengl.GLES20;
 
-import com.nevergarden.myna.display.DisplayObject;
-import com.nevergarden.myna.interfaces.IDrawable;
+import com.nevergarden.myna.ds.Color;
+import com.nevergarden.myna.gfx.GLProgram;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class Quad extends DisplayObject implements IDrawable {
-
+/**
+ * A simple quad drawing a rectangular color.
+ */
+public class Quad extends DisplayObject implements Drawable {
     private static GLProgram program = null;
     protected final Color color;
     protected final float width;
     protected final float height;
     private final FloatBuffer vertexBuffer;
+    /**
+     * A matrix used by this model.
+     */
     public float[] modelMatrix;
 
+    /**
+     * Default Constructor.
+     */
     public Quad(Color color, float width, float height) {
         super();
         this.color = color;

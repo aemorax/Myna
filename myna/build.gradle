@@ -69,6 +69,7 @@ android.libraryVariants.all { variant ->
             linkSource false
             author false
             links("http://d.android.com/reference")
+            setStylesheetFile(file("javadoc-styles.css"))
         }
 
         failOnError true

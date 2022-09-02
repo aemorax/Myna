@@ -3,6 +3,9 @@ package com.nevergarden.myna.events;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * Touch specific event.
+ */
 public class TouchEvent extends Event implements IEvent {
     private static final ArrayList<IEvent> sEventPool = new ArrayList<>();
 

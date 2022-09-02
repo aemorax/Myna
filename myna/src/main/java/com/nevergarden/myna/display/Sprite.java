@@ -1,11 +1,18 @@
-package com.nevergarden.myna.gfx;
+package com.nevergarden.myna.display;
 
 import android.opengl.GLES20;
+
+import com.nevergarden.myna.ds.Color;
+import com.nevergarden.myna.gfx.GLProgram;
+import com.nevergarden.myna.gfx.Texture;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+/**
+ * A Quad with texture.
+ */
 public class Sprite extends Quad {
     private static GLProgram program;
     private final FloatBuffer vertexBuffer;
@@ -13,6 +20,20 @@ public class Sprite extends Quad {
     private final Color spriteColor;
     private final Texture texture;
 
+    /**
+     * Texture constructor.
+     * @param texture Texture.
+     */
+    public Sprite(Texture texture) {
+        this(texture, Color.WHITE);
+    }
+
+    /**
+     * Default Constructor.
+     * Requires a texture and a color.
+     * @param texture Texture.
+     * @param color Color.
+     */
     public Sprite(Texture texture, Color color) {
         super(color, texture.width, texture.height);
         this.texture = texture;

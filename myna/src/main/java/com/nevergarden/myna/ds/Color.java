@@ -1,4 +1,4 @@
-package com.nevergarden.myna.gfx;
+package com.nevergarden.myna.ds;
 
 import java.util.Random;
 
