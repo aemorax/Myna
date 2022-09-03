@@ -14,14 +14,17 @@ import java.nio.FloatBuffer;
 /**
  * TexturePacker Sprite Animation Item.
  */
-public class TPSpriteAnimation extends Quad {
+public class TPSpriteAnimation extends Quad implements Animatable {
     private static GLProgram program = null;
-    public final int frameCount;
+    public Integer currentFrame = 0;
+    public Integer frameRate;
+
     private final FloatBuffer vertexBuffer;
     private final FloatBuffer textureCoordinationBuffer;
     private final TPAtlas atlas;
-    public int currentFrame = 0;
-    private int frameRate = 24;
+    private Boolean loop = true;
+    private Boolean isPaused = false;
+    private final Integer frameCount;
 
     /**
      * Constructor with 24 frame per second
@@ -97,7 +100,6 @@ public class TPSpriteAnimation extends Quad {
 
     @Override
     public void draw(int frame) {
-
         // Setup Shader
         program.bind();
         int positionHandler = GLES20.glGetAttribLocation(program.nativeProgram, "aPosition");
@@ -112,7 +114,7 @@ public class TPSpriteAnimation extends Quad {
         // Set vertex and texture buffers
         GLES20.glVertexAttribPointer(positionHandler, 3, GLES20.GL_FLOAT, false, 0, vertexBuffer);
         textureCoordinationBuffer.position((currentFrame % frameCount) * 10);
-        if (frame % frameRate == 0)
+        if (frame % frameRate == 0 && !isPaused)
             currentFrame++;
         GLES20.glVertexAttribPointer(texCoordinationHandler, 2, GLES20.GL_FLOAT, false, 0, textureCoordinationBuffer);
 
@@ -131,5 +133,40 @@ public class TPSpriteAnimation extends Quad {
         this.atlas.texture.unbind();
         GLES20.glDisableVertexAttribArray(positionHandler);
         GLES20.glDisableVertexAttribArray(texCoordinationHandler);
+    }
+
+    @Override
+    public void play() {
+        this.isPaused = false;
+    }
+
+    @Override
+    public void stop() {
+        this.isPaused = true;
+    }
+
+    @Override
+    public Boolean isLoop() {
+        return this.loop;
+    }
+
+    @Override
+    public void setLooping(Boolean isLoop) {
+        this.loop = isLoop;
+    }
+
+    @Override
+    public Integer getFrameRate() {
+        return this.frameRate;
+    }
+
+    @Override
+    public void setFrameRate(Integer frameRate) {
+        this.frameRate = frameRate;
+    }
+
+    @Override
+    public Integer getFrameCount() {
+        return this.frameCount;
     }
 }
